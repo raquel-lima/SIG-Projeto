@@ -1,102 +1,350 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <windows.h>
 #include <locale.h>
+#include <string.h>
 
+//Declaração das Estruturas
+typedef struct enderecoCadastro{
+  char rua[40];
+  char bairro[30];
+  char numero[6];
+  char cep[9];
+  char cidade[20];
+  char estado[3];
+} Endereco;
 
-int main(){
-	
-	setlocale(LC_ALL, "Portuguese");
-	char login[100];
-	int opcao, opcao1;
-	
-	struct dados_cliente{
-	  char nome[100];
-	  char cpf[100];
-	  char telefone[100];
-	  char endereco[100];
-	  char email[100];
-	  }cliente;
-	  
-	system("color 07");  
-	system("cls");
-	printf("\t---------------------------------------------------\n");
-	printf("\t\tSIG - Custumer Controle de Clientes \n");
-	printf("\t---------------------------------------------------\n\n");
-	printf("\tLogin: ");
-	fflush(stdin);
-	scanf("%[^\n]s", login);
-	printf("\tSenha: ");
-	scanf("%d",&opcao);
-	
-	switch (opcao){
-		case 1234:
-			do{
-				system("color 70");
-				system("cls");
-				printf("\t--------------------------------\n");
-				printf("\t\tMenu Principal \n");
-				printf("\t--------------------------------\n\n");
-				printf("\t1 - Clientes \n");
-				printf("\t2 - Compras \n");
-				printf("\t3 - Informa��es do Sistema \n");
-				printf("\t0 - Sair \n");
-				printf("\t>>>> ");
-				scanf("%d",&opcao);
-				printf("\n");
-				
-				switch(opcao){
-					case 1:
-					system("cls");
-					printf("\t--------------------------------\n");
-					printf("\t\tMenu Clientes \n");
-					printf("\t--------------------------------\n\n");
-					printf("\t1 - Cadastrar \n");
-					printf("\t2 - Pesquisar \n");
-					printf("\t3 - Alterar \n");
-					printf("\t4 - Exlcuir \n");
-					printf("\t0 - Sair \n");
-					printf("\t>>>> ");
-					scanf("%d",&opcao1);
-					printf("\n");
-					system("pause");
-					break;
-					case 2:
-					system("cls");
-					printf("\t--------------------------------\n");
-					printf("\t\tMenu Compras \n");
-					printf("\t--------------------------------\n\n");
-					system("pause");
-					break;
-					case 3:
-					system("cls");
-					printf("\t--------------------------------\n");
-					printf("\t\tMenu Informa��es do Sistema \n");
-					printf("\t--------------------------------\n\n");
-					printf("O SIG-Custumer Controle de Clientes tem por objetivo:\n\n");
-					printf("Implementar funcionalidades b�sicas relacionadas ao controle de clientes de uma empresa, facilitando sua gest�o. \n\n");
-					printf("Para mais informa��es\n");
-					printf("E-mail: raquel.discente@gmail.com\n");
-					printf("Tel.: (83)9 9986-4860 \n");
-					printf("https://github.com/raquel-lima\n\n");
-					system("pause");
-					break;
-					case 0:
-					exit(0);
-					system("pause");
-					break;
-					default:
-					printf("Op��o inv�lida!\n");
-					sleep(1);
-					break;					
-				}
+typedef struct animalCadastro{
+  char nomea[40];
+  char especie[10];
+  char sexo[10];
+  char raca[20];
+  char idade[10];
+} Animal;
 
-			}while(opcao > 0);
-			break;
-	}
-	getchar();
-	return 0;
+typedef struct clienteCadastro{
+  char data[11];
+  char nome[40];
+  char cpf[12];
+  char rg[10];
+  char telefone[11];
+  Endereco end;
+  Animal ani;
+} Pessoa; 
+
+// Declaração das variáveis
+int escolha = 0;
+int qtdClientes;
+int tamClientes;
+Pessoa *clientes;
+
+// Declaração das funções 
+void menuPrincipal();
+void menuCadastros();
+void subMenuCliente();
+Pessoa receberDadosCliente();
+void inserirCliente();
+Endereco receberDadosEndereco();
+Animal receberDadosAnimal();
+void subMenuServicos();
+void subMenuProdutos();
+
+// Inicio do main
+int main (){
+  setlocale(LC_ALL,"Portuguese");
+  menuPrincipal();
+  return 0;
 }
 
+// Exito ao realizar uma operação
+void sucesso(){
+  system("cls");
+  printf("\tOperação realizada com sucesso!");
+}
 
-//teste
+// Menu principal
+void menuPrincipal(){
+  do{
+    system("cls");
+    printf("\t---------------------------------------\n");
+    printf("\t|           PET SHOP CONTROL          |\n");
+    printf("\t---------------------------------------\n");
+    printf("\n\n\n");
+    printf("\t1 - Cadastros\n");
+    printf("\t2 - Agenda\n");
+    printf("\t3 - Relatórios\n");
+    printf("\t4 - Financeiro\n");
+    printf("\t5 - Informações sobre o Sistema\n");
+    printf("\t0 - Sair\n\n");
+    printf("\tPor favor, digite a opção desejada >>> ");
+    fflush(stdin);
+    scanf("%d", &escolha);
+    switch (escolha){
+      case 1:
+        menuCadastros();
+        break;
+      case 2:
+        
+        break;
+      case 3:
+        break;
+      case 4:
+        
+        break;
+      case 5:
+        
+        break;
+      case 0:
+        exit(1);
+      default:
+        printf("\tOpção inválida!\n\n");
+        fflush(stdin);
+    }system("pause");
+  }while (escolha != 0);
+}
+
+// Menu cadastros
+void menuCadastros(){
+  do{
+    system("cls");
+    system("color A9");
+    printf("\t---------------------------------------\n");
+    printf("\t|  PET SHOP CONTROL - CADASTROS       |\n");
+    printf("\t---------------------------------------\n");
+    printf("\n\n\n");
+    printf("\t1 - Cliente\n");
+    printf("\t2 - Serviço\n");
+    printf("\t3 - Produto\n");
+    printf("\t4 - Menu Principal\n");
+    printf("\t0 - Sair");
+    printf("\n\n");
+    printf("\tPor favor, digite a opção desejada >>> ");
+    fflush(stdin);
+    scanf("%d", &escolha);
+    switch (escolha){
+      case 1:
+        subMenuCliente();
+        break;
+      case 2:
+      subMenuServicos();
+        break;
+      case 3:
+        subMenuProdutos();
+        break;
+      case 4:
+        menuPrincipal();
+        break;
+      case 0:
+        exit(1);
+      default:
+        printf("\tOpção inválida!\n\n");
+        fflush(stdin);
+    }system("pause");
+  }while (escolha != 0);
+}
+
+//Submenu cadastro de cliente
+void subMenuCliente(){
+  do{
+    system("cls");
+    system("color F4");
+    printf("\t---------------------------------------\n");
+    printf("\t|      PET SHOP CONTROL - CLIENTE     |\n");
+    printf("\t---------------------------------------\n");
+    printf("\n\n\n");
+    printf("\t1 - Novo Cliente\n");
+    printf("\t2 - Pesquisar Cadastro\n");
+    printf("\t3 - Listar Cadastros\n");
+    printf("\t4 - Alterar Cadastro\n");
+    printf("\t5 - Excluir Cadastro\n");
+    printf("\t6 - Menu Principal\n");
+    printf("\t0 - Sair");
+    printf("\n\n");
+    printf("\tPor favor, digite a opção desejada >>> ");
+    fflush(stdin);
+    scanf("%d", &escolha);
+    switch (escolha){
+      case 1:
+        inserirCliente(receberDadosCliente());
+        fflush(stdin);
+        break;
+      case 2:
+        break;
+      case 3:
+        break;
+      case 4:
+        break;
+      case 5:
+        break;
+      case 6:
+        menuPrincipal();
+        break;
+      case 0:
+        exit(1);
+      default:
+        printf("\tOpção inválida!\n\n");
+        fflush(stdin);
+    }system("pause");
+  }while (escolha != 0);
+}
+
+//Capturando dados do cliente
+Pessoa receberDadosCliente(){
+  Pessoa p;
+  printf("\t---------------------------------------\n");
+  printf("\t|           CADASTRO CLIENTE          |\n");
+  printf("\t---------------------------------------\n");
+  printf("\n\n\n");
+  printf("Data: ");
+  fgets(p.data,10,stdin);
+  printf("Nome: "); 
+  fgets(p.nome,40,stdin);
+  printf("CPF: "); 
+  fgets(p.cpf,11,stdin);
+  printf("RG: ");
+  fgets(p.rg,10,stdin);
+  printf("Telefone: "); 
+  fgets(p.telefone,11,stdin);
+
+  p.end = receberDadosEndereco();
+  p.ani = receberDadosAnimal();
+
+  sucesso();
+  getchar();
+  return p;
+}
+
+// Capturando endereço
+Endereco receberDadosEndereco(){
+  Endereco e;
+  printf("Rua: "); 
+  fgets(e.rua,40,stdin);  
+  printf("Bairro: "); 
+  fgets(e.bairro,30,stdin);
+  printf("Número: "); 
+  fgets(e.numero,6,stdin);
+  printf("CEP: "); 
+  fgets(e.cep,8,stdin);
+  printf("Cidade: ");
+  fgets(e.cidade,20,stdin);
+  printf("Estado: \n"); 
+  fgets(e.estado,3,stdin);
+
+  getchar();
+  return e;
+}
+
+// Capturando dados do animal
+Animal receberDadosAnimal(){
+  Animal a;
+  printf("\t---------------------------------------\n");
+  printf("\t|            CADASTRO ANIMAL          |\n");
+  printf("\t---------------------------------------\n");
+  printf("\n\n\n");
+  printf("Nome: "); 
+  fgets(a.nomea,40,stdin);
+  printf("Espécie: ");
+  fgets(a.especie,40,stdin);
+  printf("Sexo: "); 
+  fgets(a.sexo,40,stdin);
+  printf("Raça: "); 
+  fgets(a.raca,40,stdin);
+  printf("Idade: "); 
+  fgets(a.idade,40,stdin);
+
+  getchar();
+  return a;
+}
+// Inserindo os dados do cliente
+void inserirCliente(Pessoa p){
+
+  if(qtdClientes == tamClientes){
+    tamClientes *= 1.5;
+    clientes = realloc(clientes, tamClientes*sizeof(Pessoa));
+  }
+  clientes[qtdClientes] = p;
+  qtdClientes++;
+}
+
+void subMenuServicos(){
+  do{
+    system("cls");
+    system("color F4");
+    printf("\t---------------------------------------\n");
+    printf("\t|      PET SHOP CONTROL - SERVIÇOS    |\n");
+    printf("\t---------------------------------------\n");
+    printf("\n\n\n");
+    printf("\t1 - Novo Serviço\n");
+    printf("\t2 - Pesquisar Serviço\n");
+    printf("\t3 - Listar Serviços\n");
+    printf("\t4 - Alterar Serviço\n");
+    printf("\t5 - Excluir Serviço\n");
+    printf("\t6 - Menu Principal\n");
+    printf("\t0 - Sair");
+    printf("\n\n");
+    printf("\tPor favor, digite a opção desejada >>> ");
+    fflush(stdin);
+    scanf("%d", &escolha);
+    switch (escolha){
+      case 1:
+        break;
+      case 2:
+        break;
+      case 3:
+        break;
+      case 4:
+        break;
+      case 5:
+        break;
+      case 6:
+        menuPrincipal();
+        break;
+      case 0:
+        exit(1);
+      default:
+        printf("\tOpção inválida!\n\n");
+        fflush(stdin);
+    }system("pause");
+  }while (escolha != 0);
+}
+
+void subMenuProdutos(){
+  do{
+    system("cls");
+    system("color F4");
+    printf("\t---------------------------------------\n");
+    printf("\t|      PET SHOP CONTROL - PRODUTOS    |\n");
+    printf("\t---------------------------------------\n");
+    printf("\n\n\n");
+    printf("\t1 - Novo Produto\n");
+    printf("\t2 - Pesquisar Produtos\n");
+    printf("\t3 - Listar Produtos\n");
+    printf("\t4 - Alterar Produto\n");
+    printf("\t5 - Excluir Produto\n");
+    printf("\t6 - Menu Principal\n");
+    printf("\t0 - Sair");
+    printf("\n\n");
+    printf("\tPor favor, digite a opção desejada >>> ");
+    fflush(stdin);
+    scanf("%d", &escolha);
+    switch (escolha){
+      case 1:
+        break;
+      case 2:
+        break;
+      case 3:
+        break;
+      case 4:
+        break;
+      case 5:
+        break;
+      case 6:
+        menuPrincipal();
+        break;
+      case 0:
+        exit(1);
+      default:
+        printf("\tOpção inválida!\n\n");
+        fflush(stdin);
+    }system("pause");
+  }while (escolha != 0);
+}
