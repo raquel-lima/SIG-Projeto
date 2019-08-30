@@ -4,49 +4,33 @@
 #include <string.h>
 
 //Declaração das Estruturas
-typedef struct enderecoCadastro{
-  char rua[40];
-  char bairro[30];
-  char numero[6];
-  char cep[9];
-  char cidade[20];
-  char estado[3];
+typedef struct endereco{
+  char rua[40],bairro[30],numero[6],cep[9],cidade[20],estado[3];
 } Endereco;
 
-typedef struct animalCadastro{
-  char nomea[40];
-  char especie[10];
-  char sexo[10];
-  char raca[20];
-  char idade[10];
+typedef struct animal{
+  char nomea[40],especie[10],sexo[10],raca[20],idade[10];
 } Animal;
 
-typedef struct clienteCadastro{
-  char data[11];
-  char nome[40];
-  char cpf[12];
-  char rg[10];
-  char telefone[11];
+typedef struct cliente{
+  char data[11],nome[40],cpf[12],rg[10],telefone[11];
   Endereco end;
   Animal ani;
-} Pessoa; 
+} Cliente; 
 
 // Declaração das variáveis
-int escolha = 0;
-int qtdClientes;
-int tamClientes;
-Pessoa *clientes;
+int escolha = 0,qtdClientes,tamClientes;
+Cliente *clientes;
 
 // Declaração das funções 
 void menuPrincipal();
 void menuCadastros();
-void subMenuCliente();
-Pessoa receberDadosCliente();
-void inserirCliente();
-Endereco receberDadosEndereco();
-Animal receberDadosAnimal();
-void subMenuServicos();
-void subMenuProdutos();
+void menuAgenda();
+void menuFinanca();
+void menuSistema();
+void submenuCliente();
+void submenuServicos();
+void submenuProdutos();
 
 // Inicio do main
 int main (){
@@ -57,23 +41,22 @@ int main (){
 
 // Exito ao realizar uma operação
 void sucesso(){
-  system("cls");
   printf("\tOperação realizada com sucesso!");
 }
 
 // Menu principal
 void menuPrincipal(){
   do{
-    system("cls");
-    printf("\t---------------------------------------\n");
-    printf("\t|           PET SHOP CONTROL          |\n");
-    printf("\t---------------------------------------\n");
+  	system("cls");
+  	system("color F0");
+    puts("\t---------------------------------------");
+    puts("\t            PET SHOP CONTROL           ");
+    puts("\t---------------------------------------");
     printf("\n\n\n");
-    printf("\t1 - Cadastros\n");
-    printf("\t2 - Agenda\n");
-    printf("\t3 - Relatórios\n");
-    printf("\t4 - Financeiro\n");
-    printf("\t5 - Informações sobre o Sistema\n");
+    puts("\t1 - Cadastros");
+    puts("\t2 - Agenda");
+    puts("\t3 - Financeiro");
+    puts("\t4 - Informações sobre o Sistema");
     printf("\t0 - Sair\n\n");
     printf("\tPor favor, digite a opção desejada >>> ");
     fflush(stdin);
@@ -83,52 +66,49 @@ void menuPrincipal(){
         menuCadastros();
         break;
       case 2:
-        
+        menuAgenda();
         break;
       case 3:
+        menuFinanca();
         break;
       case 4:
-        
-        break;
-      case 5:
-        
+        menuSistema();
         break;
       case 0:
         exit(1);
       default:
-        printf("\tOpção inválida!\n\n");
+        printf("\tOpção inválida!\n\n\n");
         fflush(stdin);
-    }system("pause");
+    }getchar();
   }while (escolha != 0);
 }
 
 // Menu cadastros
 void menuCadastros(){
   do{
-    system("cls");
-    system("color A9");
-    printf("\t---------------------------------------\n");
-    printf("\t|  PET SHOP CONTROL - CADASTROS       |\n");
-    printf("\t---------------------------------------\n");
+  	system("cls");
+  	system("color F0");
+    puts("\t---------------------------------------");
+    puts("\t   PET SHOP CONTROL - CADASTROS        ");
+    puts("\t---------------------------------------");
     printf("\n\n\n");
-    printf("\t1 - Cliente\n");
-    printf("\t2 - Serviço\n");
-    printf("\t3 - Produto\n");
-    printf("\t4 - Menu Principal\n");
-    printf("\t0 - Sair");
-    printf("\n\n");
+    puts("\t1 - Cliente");
+    puts("\t2 - Serviço");
+    puts("\t3 - Produto");
+    puts("\t4 - Voltar");
+    printf("\t0 - Sair\n\n");
     printf("\tPor favor, digite a opção desejada >>> ");
     fflush(stdin);
     scanf("%d", &escolha);
     switch (escolha){
       case 1:
-        subMenuCliente();
+        submenuCliente();
         break;
       case 2:
-      subMenuServicos();
+        submenuServicos();
         break;
       case 3:
-        subMenuProdutos();
+        submenuProdutos();
         break;
       case 4:
         menuPrincipal();
@@ -136,151 +116,28 @@ void menuCadastros(){
       case 0:
         exit(1);
       default:
-        printf("\tOpção inválida!\n\n");
+        printf("\tOpção inválida!\n\n\n");
         fflush(stdin);
-    }system("pause");
+    }getchar();
   }while (escolha != 0);
 }
 
-//Submenu cadastro de cliente
-void subMenuCliente(){
+// Menu Agenda 
+void menuAgenda(){
   do{
-    system("cls");
-    system("color F4");
-    printf("\t---------------------------------------\n");
-    printf("\t|      PET SHOP CONTROL - CLIENTE     |\n");
-    printf("\t---------------------------------------\n");
+  	system("cls");
+  	system("color F0");
+  	puts("\t---------------------------------------");
+    puts("\t       PET SHOP CONTROL - AGENDA       ");
+    puts("\t---------------------------------------");
     printf("\n\n\n");
-    printf("\t1 - Novo Cliente\n");
-    printf("\t2 - Pesquisar Cadastro\n");
-    printf("\t3 - Listar Cadastros\n");
-    printf("\t4 - Alterar Cadastro\n");
-    printf("\t5 - Excluir Cadastro\n");
-    printf("\t6 - Menu Principal\n");
-    printf("\t0 - Sair");
-    printf("\n\n");
-    printf("\tPor favor, digite a opção desejada >>> ");
-    fflush(stdin);
-    scanf("%d", &escolha);
-    switch (escolha){
-      case 1:
-        inserirCliente(receberDadosCliente());
-        fflush(stdin);
-        break;
-      case 2:
-        break;
-      case 3:
-        break;
-      case 4:
-        break;
-      case 5:
-        break;
-      case 6:
-        menuPrincipal();
-        break;
-      case 0:
-        exit(1);
-      default:
-        printf("\tOpção inválida!\n\n");
-        fflush(stdin);
-    }system("pause");
-  }while (escolha != 0);
-}
-
-//Capturando dados do cliente
-Pessoa receberDadosCliente(){
-  Pessoa p;
-  printf("\t---------------------------------------\n");
-  printf("\t|           CADASTRO CLIENTE          |\n");
-  printf("\t---------------------------------------\n");
-  printf("\n\n\n");
-  printf("Data: ");
-  fgets(p.data,10,stdin);
-  printf("Nome: "); 
-  fgets(p.nome,40,stdin);
-  printf("CPF: "); 
-  fgets(p.cpf,11,stdin);
-  printf("RG: ");
-  fgets(p.rg,10,stdin);
-  printf("Telefone: "); 
-  fgets(p.telefone,11,stdin);
-
-  p.end = receberDadosEndereco();
-  p.ani = receberDadosAnimal();
-
-  sucesso();
-  getchar();
-  return p;
-}
-
-// Capturando endereço
-Endereco receberDadosEndereco(){
-  Endereco e;
-  printf("Rua: "); 
-  fgets(e.rua,40,stdin);  
-  printf("Bairro: "); 
-  fgets(e.bairro,30,stdin);
-  printf("Número: "); 
-  fgets(e.numero,6,stdin);
-  printf("CEP: "); 
-  fgets(e.cep,8,stdin);
-  printf("Cidade: ");
-  fgets(e.cidade,20,stdin);
-  printf("Estado: \n"); 
-  fgets(e.estado,3,stdin);
-
-  getchar();
-  return e;
-}
-
-// Capturando dados do animal
-Animal receberDadosAnimal(){
-  Animal a;
-  printf("\t---------------------------------------\n");
-  printf("\t|            CADASTRO ANIMAL          |\n");
-  printf("\t---------------------------------------\n");
-  printf("\n\n\n");
-  printf("Nome: "); 
-  fgets(a.nomea,40,stdin);
-  printf("Espécie: ");
-  fgets(a.especie,40,stdin);
-  printf("Sexo: "); 
-  fgets(a.sexo,40,stdin);
-  printf("Raça: "); 
-  fgets(a.raca,40,stdin);
-  printf("Idade: "); 
-  fgets(a.idade,40,stdin);
-
-  getchar();
-  return a;
-}
-// Inserindo os dados do cliente
-void inserirCliente(Pessoa p){
-
-  if(qtdClientes == tamClientes){
-    tamClientes *= 1.5;
-    clientes = realloc(clientes, tamClientes*sizeof(Pessoa));
-  }
-  clientes[qtdClientes] = p;
-  qtdClientes++;
-}
-
-void subMenuServicos(){
-  do{
-    system("cls");
-    system("color F4");
-    printf("\t---------------------------------------\n");
-    printf("\t|      PET SHOP CONTROL - SERVIÇOS    |\n");
-    printf("\t---------------------------------------\n");
-    printf("\n\n\n");
-    printf("\t1 - Novo Serviço\n");
-    printf("\t2 - Pesquisar Serviço\n");
-    printf("\t3 - Listar Serviços\n");
-    printf("\t4 - Alterar Serviço\n");
-    printf("\t5 - Excluir Serviço\n");
-    printf("\t6 - Menu Principal\n");
-    printf("\t0 - Sair");
-    printf("\n\n");
+    puts("\t1 - Novo Agendamento");
+    puts("\t2 - Pesquisar Agendamento");
+    puts("\t3 - Listar Agendamentos");
+    puts("\t4 - Alterar Agendamento");
+    puts("\t5 - Excluir Agendamento");
+    puts("\t6 - Voltar");
+    printf("\t0 - Sair\n\n");
     printf("\tPor favor, digite a opção desejada >>> ");
     fflush(stdin);
     scanf("%d", &escolha);
@@ -301,28 +158,29 @@ void subMenuServicos(){
       case 0:
         exit(1);
       default:
-        printf("\tOpção inválida!\n\n");
+        printf("\tOpção inválida!\n\n\n");
         fflush(stdin);
-    }system("pause");
+    }getchar();
   }while (escolha != 0);
 }
 
-void subMenuProdutos(){
-  do{
-    system("cls");
-    system("color F4");
-    printf("\t---------------------------------------\n");
-    printf("\t|      PET SHOP CONTROL - PRODUTOS    |\n");
-    printf("\t---------------------------------------\n");
+// Menu Financeiro
+void menuFinanca(){
+	do{
+  	system("cls");
+  	system("color F0");
+    puts("\t---------------------------------------");
+    puts("\t     PET SHOP CONTROL - FINANCEIRO     ");
+    puts("\t---------------------------------------");
     printf("\n\n\n");
-    printf("\t1 - Novo Produto\n");
-    printf("\t2 - Pesquisar Produtos\n");
-    printf("\t3 - Listar Produtos\n");
-    printf("\t4 - Alterar Produto\n");
-    printf("\t5 - Excluir Produto\n");
-    printf("\t6 - Menu Principal\n");
-    printf("\t0 - Sair");
-    printf("\n\n");
+    puts("\t1 - Relatóio Diário");
+    puts("\t2 - Relatório Semanal");
+    puts("\t3 - Relatório Mensal");
+    puts("\t4 - Relatório Semestral");
+    puts("\t5 - Relatóio Anual");
+    puts("\t6 - Ver todos");
+    puts("\t7 - Voltar");
+    printf("\t0 - Sair\n\n");
     printf("\tPor favor, digite a opção desejada >>> ");
     fflush(stdin);
     scanf("%d", &escolha);
@@ -338,13 +196,167 @@ void subMenuProdutos(){
       case 5:
         break;
       case 6:
+        break;
+      case 7:
         menuPrincipal();
         break;
       case 0:
         exit(1);
       default:
-        printf("\tOpção inválida!\n\n");
+        printf("\tOpção inválida!\n\n\n");
         fflush(stdin);
-    }system("pause");
+    }getchar();
+  }while (escolha != 0);
+}
+
+// Memu Sistema
+void menuSistema(){
+  	system("cls");
+  	system("color F0");
+    puts("\t---------------------------------------");
+    puts("\t        INFORMAÇÕES DO SISTEMA         ");
+    puts("\t---------------------------------------");
+    printf("\n\n\n");
+    puts("\t VERSÃO: 1.0 ");
+	puts("\t DESENVOLVIDO POR RAQUEL LIMA FERNANDES");
+	puts("\t PARA PROJETO DA DISCIPLINA DE PROGRAMAÇÃO");
+	puts("\t PROFESSOR FLÁVIUS GORGONIO");
+	printf("\t UFRN/CERES CAMPUS CAICÓ, BS1 2019.2 \n\n");
+	puts("\t DATA DE TÉRMINO PARTE 01: 30/8/2019");
+	printf("\t CÓDIGO DISPONÍVEL EM: https://github.com/raquel-lima/SIG-Projeto \n\n\n");
+    puts("\t 1 - Voltar");
+    printf("\t 0 - Sair\n\n");
+    printf("\tPor favor, digite a opção desejada >>> ");
+    fflush(stdin);
+    scanf("%d", &escolha);
+    switch (escolha){
+      case 1:
+        menuPrincipal();
+        break;
+      case 0:
+        exit(1);
+      default:
+        printf("\tOpção inválida!\n\n\n");
+        fflush(stdin);
+    }getchar();
+}
+
+// Submenu cliente
+void submenuCliente(){
+  do{
+    system("cls");
+    system("color F0");
+    puts("\t---------------------------------------");
+    puts("\t       PET SHOP CONTROL - CLIENTE      ");
+    puts("\t---------------------------------------");
+    printf("\n\n\n");
+    puts("\t1 - Novo Cliente");
+    puts("\t2 - Pesquisar Cliente");
+    puts("\t3 - Listar Cliente");
+    puts("\t4 - Alterar Cliente");
+    puts("\t5 - Excluir Cliente");
+    puts("\t6 - Voltar");
+    printf("\t0 - Sair\n\n");
+    printf("\tPor favor, digite a opção desejada >>> ");
+    fflush(stdin);
+    scanf("%d", &escolha);
+    switch (escolha){
+      case 1:
+        break;
+      case 2:
+        break;
+      case 3:
+        break;
+      case 4:
+        break;
+      case 5:
+        break;
+      case 6:
+        menuCadastros();
+        break;
+      case 0:
+        exit(1);
+      default:
+        printf("\tOpção inválida!\n\n\n");
+        fflush(stdin);
+    }getchar();
+  }while (escolha != 0);
+}
+
+//submenu serviços
+void submenuServicos(){
+  do{
+  	system("cls");
+  	system("color F0");
+    puts("\t---------------------------------------");
+    puts("\t               SERVIÇOS                ");
+    puts("\t---------------------------------------");
+    printf("\n\n\n");
+    puts("\t1 - Clínica");
+    puts("\t2 - Produto");
+    puts("\t3 - Pet Shop");
+    puts("\t4 - Voltar");
+    printf("\t0 - Sair\n\n");
+    printf("\tPor favor, digite a opção desejada >>> ");
+    fflush(stdin);
+    scanf("%d", &escolha);
+    switch (escolha){
+      case 1:
+        break;
+      case 2:
+        break;
+      case 3:
+        break;
+      case 4:
+      	menuCadastros();
+        break;
+      case 0:
+        exit(EXIT_SUCCESS);
+      default:
+        printf("\tOpção inválida!\n\n\n");
+        fflush(stdin);
+    }
+  }while (escolha != 0);
+}
+
+// Submenu produtos
+void submenuProdutos(){
+  do{
+  	system("cls");
+  	system("color F0");
+    puts("\t---------------------------------------");
+    puts("\t       PET SHOP CONTROL - PRODUTOS     ");
+    puts("\t---------------------------------------");
+    printf("\n\n\n");
+    puts("\t1 - Novo Produto");
+    puts("\t2 - Pesquisar Produtos");
+    puts("\t3 - Listar Produtos");
+    puts("\t4 - Alterar Produto");
+    puts("\t5 - Excluir Produto");
+    puts("\t6 - Voltar");
+    puts("\t0 - Sair\n\n");
+    printf("\tPor favor, digite a opção desejada >>> ");
+    fflush(stdin);
+    scanf("%d", &escolha);
+    switch (escolha){
+      case 1:
+        break;
+      case 2:
+        break;
+      case 3:
+        break;
+      case 4:
+        break;
+      case 5:
+        break;
+      case 6:
+        menuCadastros();
+        break;
+      case 0:
+        exit(1);
+      default:
+        printf("\tOpção inválida!\n\n\n");
+        fflush(stdin);
+    }getchar();
   }while (escolha != 0);
 }
