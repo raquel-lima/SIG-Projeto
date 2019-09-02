@@ -13,7 +13,7 @@ typedef struct animal{
 } Animal;
 
 typedef struct cliente{
-  char data[11],nome[40],cpf[12],rg[10],telefone[11];
+  char data[11],nome[40],cpf[12],rg[10],telefone[11],email[20];
   Endereco end;
   Animal ani;
 } Cliente; 
@@ -31,6 +31,12 @@ void menuSistema();
 void submenuCliente();
 void submenuServicos();
 void submenuProdutos();
+Cliente receberCliente();
+Endereco receberEndereco();
+Animal receberAnimal();
+
+
+
 
 // Inicio do main
 int main (){
@@ -41,7 +47,7 @@ int main (){
 
 // Exito ao realizar uma operação
 void sucesso(){
-  printf("\tOperação realizada com sucesso!");
+  printf("\tOperação realizada com sucesso!\n\n\n\n");
 }
 
 // Menu principal
@@ -262,6 +268,7 @@ void submenuCliente(){
     scanf("%d", &escolha);
     switch (escolha){
       case 1:
+      	receberCliente();
         break;
       case 2:
         break;
@@ -360,3 +367,93 @@ void submenuProdutos(){
     }getchar();
   }while (escolha != 0);
 }
+
+// Recebendo dados cadastro: cliente, endereço, animal
+Cliente receberCliente(){
+	Cliente cli;
+	system("cls");
+  	system("color F0");
+    puts("\t---------------------------------------");
+    puts("\t            CADASTRO CLIENTE           ");
+    puts("\t---------------------------------------");
+    printf("\n\n\n");
+    printf("\tData: ");
+    fflush(stdin);
+    scanf("%[^\n]s",&cli.data);
+    printf("\tNome: ");
+    fflush(stdin);
+    scanf("%[^\n]s",&cli.nome);
+    printf("\tCPF: ");
+    fflush(stdin);
+    scanf("%[^\n]s",&cli.cpf);
+    printf("\tRG: ");
+    fflush(stdin);
+    scanf("%[^\n]s",&cli.rg);
+    printf("\tTelefone: ");
+    fflush(stdin);
+    scanf("%[^\n]s",&cli.telefone);
+    printf("\tEmail: ");
+    fflush(stdin);
+    scanf("%[^\n]s",&cli.email);
+    
+    cli.end = receberEndereco();
+    cli.ani = receberAnimal();
+    
+    sucesso();
+    getch();
+    return cli;	
+}
+
+Endereco receberEndereco(){
+	Endereco end;
+
+    printf("\tRua: ");
+    fflush(stdin);
+    scanf("%[^\n]s",&end.rua);
+    printf("\tBairro: ");
+    fflush(stdin);
+    scanf("%[^\n]s",&end.bairro);
+    printf("\tNº: ");
+    fflush(stdin);
+    scanf("%[^\n]s",&end.numero);
+    printf("\tCEP: ");
+    fflush(stdin);
+    scanf("%[^\n]s",&end.cep);
+    printf("\tCidade: ");
+    fflush(stdin);
+    scanf("%[^\n]s",&end.cidade);
+    printf("\tEstado: ");
+    fflush(stdin);
+    scanf("%[^\n]s",&end.estado);
+    
+    return end;	
+}
+
+Animal receberAnimal(){
+	Animal ani;
+	
+	system("cls");
+  	system("color F0");
+    puts("\t---------------------------------------");
+    puts("\t             CADASTRO ANIMAL           ");
+    puts("\t---------------------------------------");
+    printf("\n\n\n");
+    printf("\tNome: ");
+    fflush(stdin);
+    scanf("%[^\n]s",&ani.nomea);
+    printf("\tEspécie: ");
+    fflush(stdin);
+    scanf("%[^\n]s",&ani.especie);
+    printf("\tSexo: ");
+    fflush(stdin);
+    scanf("%[^\n]s",&ani.sexo);
+    printf("\tRaça: ");
+    fflush(stdin);
+    scanf("%[^\n]s",&ani.raca);
+    printf("\tIdade: ");
+    fflush(stdin);
+    scanf("%[^\n]s",&ani.idade);
+    
+    return ani;	
+}
+
