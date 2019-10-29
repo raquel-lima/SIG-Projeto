@@ -6,6 +6,12 @@
 #include <windows.h>
 
 
+typedef struct data {
+    int dia;
+    int mes;
+    int ano;
+}Data;
+
 typedef struct cliente {
     int cod;
     char nome[50];
@@ -15,25 +21,77 @@ typedef struct cliente {
     char status;
 }Cliente;
 
+typedef struct pet {
+    int cod;
+    char nomeProp[50];
+    char cpfProp[15];
+    char nome[10];
+    char esp[10];
+    char datanasc[15];
+    char sexo[2];
+    char status;
+}Pet;
+
+typedef struct servico {
+    int cod;
+    char tipo[15];
+    float preco;
+}Servicos;
+
+typedef struct agendamento {
+    int cod;
+    int codCliente;
+    char nomeCliente[50];
+    char cpfCliente[50];
+    int codPet;
+    char nome[10];
+    char esp[10];
+    char sexo[2];
+    int codServico;
+    char tipo[10];
+    float preco;
+    Data agendamento;
+}Agendamento;
+
 
 void move_cursor (int x, int y, char c[10]);
 void menuPrincipal (void);
-
- 
 void menuCliente (void);
-void cadastrarCliente (Cliente* cli);
-void salvarCliente (Cliente* cli);
-void pesquisarCliente (Cliente* cli);
-void verCliente (Cliente* cli);
+Cliente* cadastrarCliente (void);
+void salvarCliente (Cliente*);
+Cliente* pesquisarCliente (void);
+void verCliente (Cliente*);
 void menuAlterarCliente (void);
-void mudaCodigoCliente (void);
-void mudaNomeCliente (void);
-void mudaCpfCliente (void);
-void mudaEnderecoCliente (void);
-void mudaTelefoneCliente (void);
-void mudaCamposCliente (void);
-void excluirCliente (Cliente* cli);
+Cliente* altCodCliente (void);
+Cliente* altNomeCliente (void);
+Cliente* altCpfCliente (void);
+Cliente* altEndCliente (void);
+Cliente* altTelCliente (void);
+Cliente* altCamposCliente (void);
+Cliente* excluirCliente (void);
 void exibirClientes (Cliente* cli);
+
+
+void menuPet (void);
+Pet* cadastrarPet (void);
+void salvarPet (Pet*);
+Pet* pesquisarPet (void);
+void verPet (Pet*);
+void menuAlterarPet (void);
+Pet* altNomePropPet (void);
+Pet* altCpfPropPet (void);
+Pet* altCodPet (void);
+Pet* altNomePet (void);
+Pet* altEspPet (void);
+Pet* altDataNascPet (void);
+Pet* altSexoPet (void);
+Pet* altCamposPet (void);
+Pet* excluirPet (void);
+void exibirPets (Pet* pet);
+
+void menuServicos (void);
+void menuAgendamentos (void);
+void menuInformacoes (void);
 
 
 int main (void) {
@@ -45,14 +103,14 @@ int main (void) {
 
 
 void menuPrincipal (void) {
-
-	system("MODE con cols=80 lines=24");
-	
+    system("MODE con cols=80 lines=24");
+    system("color 3F");
     char op;
     int posx = 4;
     int posy = 6;
 
     do {
+        system("cls");
         move_cursor(30,1,"::: MENU PRINCIPAL :::");
 	    move_cursor(5,6,"1 - Cliente");
 	    move_cursor(5,8,"2 - Pet");
@@ -85,16 +143,16 @@ void menuPrincipal (void) {
                     menuCliente ();
 	            }         
 				if (posy == 8) {
-
+                    menuPet ();
                 }                
                 if (posy == 10) {
-
+                    menuServicos ();
                 }                
                 if (posy == 12) {
-                   
+                    menuAgendamentos ();
                 }                
                 if (posy == 14) {
-                  
+                    menuInformacoes ();
                 }
                 if (posy == 16) {
                     exit(EXIT_SUCCESS);
@@ -104,19 +162,18 @@ void menuPrincipal (void) {
 
     }while(1);
     getchar();
-
 }
 
-
-void menuCliente (void) {
-    Cliente* cli;
+void menuCliente () {
+    system("MODE con cols=80 lines=24");
+    system("color 3F");
     char op;
     int posx = 4;
     int posy = 6;
-
+    Cliente* cli;
+    
     do {
-        system("MODE con cols=80 lines=24");
-
+        system("cls");
         move_cursor(30,1,"::: MENU CLIENTE :::");
 	    move_cursor(5,6,"1 - Cadastrar");
 	    move_cursor(5,8,"2 - Pesquisar ");
@@ -125,7 +182,7 @@ void menuCliente (void) {
 	    move_cursor(5,14,"5 - Exibir todos");
         move_cursor(5,16,"Menu Principal");
 	    move_cursor(38,16,"Sair");
-	    move_cursor(5,20,"Selecione uma opcao e tecle ENTER\n");
+        move_cursor(5,20,"Selecione uma opcao e tecle ENTER\n");
         move_cursor(posx, posy, ">");
 
         op = toupper(getch());
@@ -161,18 +218,18 @@ void menuCliente (void) {
             break;
 			case 13:
 				if (posy == 6) {
-                    cadastrarCliente (cli);
+                    cli = cadastrarCliente ();
                     salvarCliente (cli);
 	            }         
 				if (posy == 8) {
-                    pesquisarCliente (cli);
+                    cli = pesquisarCliente ();
                     verCliente (cli);
                 }                
                 if (posy == 10) {
                 	menuAlterarCliente ();
                 }                
                 if (posy == 12) {
-                    excluirCliente (cli);
+                    cli = excluirCliente ();
                 }                
                 if (posy == 14) {
                     exibirClientes (cli);
@@ -192,13 +249,16 @@ void menuCliente (void) {
 
 }
 
-void cadastrarCliente (Cliente* cli) {
+
+Cliente* cadastrarCliente (void) {
+	Cliente* cli;
     char resp;
     int posx = 4;
     int posy = 6;
     cli = (Cliente*) malloc(sizeof(Cliente));
 
     system("MODE con cols=80 lines=24");
+    system("color 3F");
     move_cursor(30,1,"::: CADASTRO DE CLIENTE :::");
     move_cursor(5,6,"Codigo Cliente: ");
 	scanf(" %d", &cli->cod);
@@ -224,7 +284,7 @@ void cadastrarCliente (Cliente* cli) {
 		move_cursor(5,21,"Cadastro cancelado, tecle ENTER para voltar ao MENU CLIENTE\n");
 	}
 	getchar();
-
+	return cli;
 }
 
 void salvarCliente (Cliente* cli) {
@@ -242,19 +302,23 @@ void salvarCliente (Cliente* cli) {
 		
 }
 
-void pesquisarCliente (Cliente* cli) {
+
+Cliente* pesquisarCliente (void) {
     FILE* fp;
     char procurado[15];
     int achou;
+    Cliente* cli;
 
     fp = fopen("cliente.dat", "rb");
     cli = (Cliente*) malloc(sizeof(Cliente));
+
     if (fp == NULL) {
 		printf("\n\n\tErro na abertura do arquivo!\n");
 		printf("\n\n\tEncerrando o programa...");
 		exit(EXIT_FAILURE);
   	}
     system("MODE con cols=80 lines=24");
+    system("color 3F");
     move_cursor(30,1,"::: PESQUISAR CLIENTE :::");
 	printf("\n\n\n");
 	move_cursor(8,6,"Digite o CPF do Cliente: ");
@@ -269,15 +333,15 @@ void pesquisarCliente (Cliente* cli) {
 	fclose(fp);
 	if (achou){
 		verCliente (cli);
-		getchar();
+        getchar();
 		move_cursor(8,21,"Tecle ENTER para voltar ao MENU CLIENTE\n");
   	}else{
 		move_cursor(8,21,"Cliente nao cadastrado, tecle ENTER para voltar ao MENU CLIENTE\n");
-    	
 	}
 	getchar();
-
+    return cli;
 }
+
 
 void verCliente (Cliente* cli) {
 	printf("\n");
@@ -287,17 +351,19 @@ void verCliente (Cliente* cli) {
 	printf("\n\tEndereco: %s\n", cli->end);
 	printf("\n\tTelefone: %s\n", cli->tel);
     printf("\t::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n\n");
-
 }
 
+
 void menuAlterarCliente (void) {
-	Cliente* cli;
+    system("MODE con cols=80 lines=24");
+    system("color 3F");
     char op;
     int posx = 4;
     int posy = 6;
+    Cliente* cli;
 
     do {
-		system("MODE con cols=80 lines=24");
+		system("cls");
         move_cursor(30,1,"::: MENU ALTERAR CLIENTE :::");
 	    move_cursor(5,6,"1 - Codigo Cliente");
 	    move_cursor(5,8,"2 - Nome");
@@ -307,7 +373,7 @@ void menuAlterarCliente (void) {
 	    move_cursor(5,16,"6 - Todos os Campos");
 	    move_cursor(5,18,"Menu Cliente");
 	    move_cursor(38,18,"Sair");
-	    move_cursor(5,21,"Selecione uma opcao a ser alterada e tecle ENTER\n");
+	    move_cursor(5,21,"Selecione a opcao a ser alterada e tecle ENTER\n");
         move_cursor(posx, posy, ">");
         
         op = toupper(getch());
@@ -343,22 +409,22 @@ void menuAlterarCliente (void) {
             break;
 			case 13:
 				if (posy == 6) {
-					mudaCodigoCliente ();
+					cli = altCodCliente ();
 	            }         
 				if (posy == 8) {
-					mudaNomeCliente ();
+					cli = altNomeCliente ();
                 }                
                 if (posy == 10) {
-                	mudaCpfCliente ();   
+                	cli = altCpfCliente ();
                 }             
                 if (posy == 12) {
-                	mudaEnderecoCliente (); 
+                	cli = altEndCliente ();
                 }                
                 if (posy == 14) {
-					mudaTelefoneCliente ();
+					cli = altTelCliente (); 
                 }
                 if (posy == 16) {
-					mudaCamposCliente ();
+					cli = altCamposCliente ();
                 }
                 if ((posx == 4) && (posy == 18)) {
                     menuCliente ();
@@ -374,17 +440,17 @@ void menuAlterarCliente (void) {
 
 }
 
-void mudaCodigoCliente (void){
-	Cliente* cli;
+Cliente* altCodCliente (void) {
+    system("MODE con cols=80 lines=24");
+    system("color 3F");
     FILE* fp;
 	int achou;
 	int menusUm = -1;
 	char resp;
 	char procurado[15];
-	int posx = 4, posy = 6;
-	
-	system("MODE con cols=80 lines=24");
-	
+	int posx = 7, posy = 6;
+	Cliente* cli;
+
 	fp = fopen("cliente.dat", "r+b");
 	cli = (Cliente*) malloc(sizeof(Cliente));
 	
@@ -422,30 +488,33 @@ void mudaCodigoCliente (void){
 			
 			fseek(fp, menusUm*sizeof(Cliente), SEEK_CUR);
 			fwrite(cli, sizeof(Cliente), 1, fp);
-			move_cursor(8,21,"Codigo alterado com sucesso, tecle ENTER para voltar ao MENU CLIENTE\n");	
-			getchar();
+			move_cursor(8,10,"Codigo alterado com sucesso\n");
+            move_cursor(8,12,"tecle ENTER para voltar ao MENU ALTERAR CLIENTE\n");	
     	} else {
-			move_cursor(8,21,"Codigo nao alterado, tecle ENTER para voltar ao MENU CLIENTE\n");
+			move_cursor(8,10,"Codigo nao alterado\n");
+            move_cursor(8,12,"tecle ENTER para voltar ao MENU ALTERAR CLIENTE\n");
 		}
     } else {
-		printf("\n\n\n\n\n\n\tO CPF %s não foi encontrado...\n", procurado);
+		printf("\n\n\n\n\n\n\tO CPF %s nao foi encontrado...\n", procurado);
 	}
 	fclose(fp);
 	free(cli);
-
+    getchar();
+    getchar();
+    return cli;
 }
 
 
-void mudaNomeCliente (void){
-	Cliente* cli;
+Cliente* altNomeCliente (void) {
+    system("MODE con cols=80 lines=24");
+    system("color 3F");
     FILE* fp;
 	int achou;
 	int menusUm = -1;
 	char resp;
 	char procurado[15];
 	int posx = 4, posy = 6;
-	
-	system("MODE con cols=80 lines=24");
+    Cliente* cli;
 	
 	fp = fopen("cliente.dat", "r+b");
 	cli = (Cliente*) malloc(sizeof(Cliente));
@@ -484,30 +553,33 @@ void mudaNomeCliente (void){
 			
 			fseek(fp, menusUm*sizeof(Cliente), SEEK_CUR);
 			fwrite(cli, sizeof(Cliente), 1, fp);
-			move_cursor(8,21,"Nome alterado com sucesso, tecle ENTER para voltar ao MENU CLIENTE\n");	
-			getchar();
+			move_cursor(8,10,"Nome alterado com sucesso\n");
+            move_cursor(8,12,"tecle ENTER para voltar ao MENU ALTERAR CLIENTE\n");	
     	} else {
-			move_cursor(8,21,"Nome nao alterado, tecle ENTER para voltar ao MENU CLIENTE\n");
+			move_cursor(8,10,"Nome nao alterado\n");
+            move_cursor(8,12,"tecle ENTER para voltar ao MENU ALTERAR CLIENTE\n");
 		}
     } else {
-		printf("\n\n\n\n\n\n\tO CPF %s não foi encontrado...\n", procurado);
+		printf("\n\n\n\n\n\n\tO CPF %s nao foi encontrado...\n", procurado);
 	}
 	fclose(fp);
 	free(cli);
-
+    getchar();
+    getchar();
+    return cli;
 }
 
 
-void mudaCpfCliente (void){
-	Cliente* cli;
+Cliente* altCpfCliente (void) {
+    system("MODE con cols=80 lines=24");
+    system("color 3F");
     FILE* fp;
 	int achou;
 	int menusUm = -1;
 	char resp;
 	char procurado[15];
 	int posx = 4, posy = 6;
-	
-	system("MODE con cols=80 lines=24");
+    Cliente* cli;
 	
 	fp = fopen("cliente.dat", "r+b");
 	cli = (Cliente*) malloc(sizeof(Cliente));
@@ -546,31 +618,34 @@ void mudaCpfCliente (void){
 			
 			fseek(fp, menusUm*sizeof(Cliente), SEEK_CUR);
 			fwrite(cli, sizeof(Cliente), 1, fp);
-			move_cursor(8,21,"CPF alterado com sucesso, tecle ENTER para voltar ao MENU CLIENTE\n");	
-			getchar();
+			move_cursor(8,10,"CPF alterado com sucesso\n");
+            move_cursor(8,12,"tecle ENTER para voltar ao MENU ALTERAR CLIENTE\n");	
     	} else {
-			move_cursor(8,21,"CPF nao alterado, tecle ENTER para voltar ao MENU CLIENTE\n");
+			move_cursor(8,10,"CPF nao alterado\n");
+            move_cursor(8,12,"tecle ENTER para voltar ao MENU ALTERAR CLIENTE\n");
 		}
     } else {
-		printf("\n\n\n\n\n\n\tO CPF %s não foi encontrado...\n", procurado);
+		printf("\n\n\n\n\n\n\tO CPF %s nao foi encontrado...\n", procurado);
 	}
 	fclose(fp);
 	free(cli);
-
+    getchar();
+    getchar();
+    return cli;
 }
 
 
-void mudaEnderecoCliente (void){
-	Cliente* cli;
+Cliente* altEndCliente (void) {
+    system("MODE con cols=80 lines=24");
+    system("color 3F");
     FILE* fp;
 	int achou;
 	int menusUm = -1;
 	char resp;
 	char procurado[15];
 	int posx = 4, posy = 6;
-	
-	system("MODE con cols=80 lines=24");
-	
+	Cliente* cli;
+
 	fp = fopen("cliente.dat", "r+b");
 	cli = (Cliente*) malloc(sizeof(Cliente));
 	
@@ -608,30 +683,33 @@ void mudaEnderecoCliente (void){
 			
 			fseek(fp, menusUm*sizeof(Cliente), SEEK_CUR);
 			fwrite(cli, sizeof(Cliente), 1, fp);
-			move_cursor(8,21,"Endereco alterado com sucesso, tecle ENTER para voltar ao MENU CLIENTE\n");	
-			getchar();
+			move_cursor(8,10,"Endereco alterado com sucesso\n");
+            move_cursor(8,12,"tecle ENTER para voltar ao MENU ALTERAR CLIENTE\n");	
     	} else {
-			move_cursor(8,21,"Endereco nao alterado, tecle ENTER para voltar ao MENU CLIENTE\n");
+			move_cursor(8,10,"Endereco nao alterado\n");
+            move_cursor(8,12,"tecle ENTER para voltar ao MENU ALTERAR CLIENTE\n");
 		}
     } else {
-		printf("\n\n\n\n\n\n\tO CPF %s não foi encontrado...\n", procurado);
+		printf("\n\n\n\n\n\n\tO CPF %s nao foi encontrado...\n", procurado);
 	}
 	fclose(fp);
 	free(cli);
-
+    getchar();
+    getchar();
+    return cli;
 }
 
 
-void mudaTelefoneCliente (void){
-	Cliente* cli;
+Cliente* altTelCliente (void) {
+    system("MODE con cols=80 lines=24");
+    system("color 3F");
     FILE* fp;
 	int achou;
 	int menusUm = -1;
 	char resp;
 	char procurado[15];
 	int posx = 4, posy = 6;
-	
-	system("MODE con cols=80 lines=24");
+    Cliente* cli;
 	
 	fp = fopen("cliente.dat", "r+b");
 	cli = (Cliente*) malloc(sizeof(Cliente));
@@ -670,30 +748,33 @@ void mudaTelefoneCliente (void){
 			
 			fseek(fp, menusUm*sizeof(Cliente), SEEK_CUR);
 			fwrite(cli, sizeof(Cliente), 1, fp);
-			move_cursor(8,21,"Telefone alterado com sucesso, tecle ENTER para voltar ao MENU CLIENTE\n");	
-			getchar();
+			move_cursor(8,10,"Telefone alterado com sucesso\n");
+            move_cursor(8,12,"tecle ENTER para voltar ao MENU ALTERAR CLIENTE\n");	
     	} else {
-			move_cursor(8,21,"Telefone nao alterado, tecle ENTER para voltar ao MENU CLIENTE\n");
+			move_cursor(8,10,"Telefone nao alterado\n");
+            move_cursor(8,12,"tecle ENTER para voltar ao MENU ALTERAR CLIENTE\n");
 		}
     } else {
-		printf("\n\n\n\n\n\n\tO CPF %s não foi encontrado...\n", procurado);
+		printf("\n\n\n\n\n\n\tO CPF %s nao foi encontrado...\n", procurado);
 	}
 	fclose(fp);
 	free(cli);
-
+    getchar();
+    getchar();
+    return cli;
 }
 
 
-void mudaCamposCliente (void){
-	Cliente* cli;
+Cliente* altCamposCliente (void) {
+    system("MODE con cols=80 lines=24");
+    system("color 3F");
     FILE* fp;
 	int achou;
 	int menusUm = -1;
 	char resp;
 	char procurado[15];
 	int posx = 4, posy = 6;
-	
-	system("MODE con cols=80 lines=24");
+    Cliente* cli;
 	
 	fp = fopen("cliente.dat", "r+b");
 	cli = (Cliente*) malloc(sizeof(Cliente));
@@ -703,7 +784,7 @@ void mudaCamposCliente (void){
 		printf("\n\n\tEncerrando o programa...");
 		exit(EXIT_FAILURE);
   	}
-	move_cursor(30,1,"::: PESQUISAR CLIENTE :::");
+    move_cursor(30,1,"::: PESQUISAR CLIENTE :::");
 	printf("\n\n\n");
 	move_cursor(8,6,"Digite o CPF do Cliente: ");
 	scanf("%15[^\n]", procurado);
@@ -740,28 +821,32 @@ void mudaCamposCliente (void){
 			
 			fseek(fp, menusUm*sizeof(Cliente), SEEK_CUR);
 			fwrite(cli, sizeof(Cliente), 1, fp);
-			move_cursor(8,21,"Campos alterados com sucesso, tecle ENTER para voltar ao MENU CLIENTE\n");	
-			getchar();
+			move_cursor(8,18,"Campos alterados com sucesso\n");
+            move_cursor(8,20,"tecle ENTER para voltar ao MENU ALTERAR CLIENTE\n");	
     	} else {
-			move_cursor(8,21,"Campos nao foram alterados, tecle ENTER para voltar ao MENU CLIENTE\n");
+			move_cursor(8,18,"Campos nao alterados\n");
+            move_cursor(8,20,"tecle ENTER para voltar ao MENU ALTERAR CLIENTE\n");
 		}
     } else {
-		printf("\n\n\n\n\n\n\tO CPF %s não foi encontrado...\n", procurado);
+		printf("\n\n\n\n\n\n\tO CPF %s nao foi encontrado...\n", procurado);
 	}
 	fclose(fp);
 	free(cli);
-
+    getchar();
+    getchar();
+    return cli;
 }
 
 
-void excluirCliente (Cliente* cli) {
-	FILE* fp;
+Cliente* excluirCliente (void) {
+    system("MODE con cols=80 lines=24");
+    system("color 3F");
+    Cliente* cli;
+    FILE* fp;
 	int achou;
 	int menusUm = -1;
 	char resp;
 	char procurado[15];
-	
-	system("MODE con cols=80 lines=24");
 	
 	fp = fopen("cliente.dat", "r+b");
 	
@@ -797,19 +882,27 @@ void excluirCliente (Cliente* cli) {
 			fseek(fp, menusUm*sizeof(Cliente), SEEK_CUR);
 			fwrite(cli, sizeof(Cliente), 1, fp);
 			
-			move_cursor(8,21,"Cliente excluido com sucesso, tecle ENTER para voltar ao MENU CLIENTE\n");
-		} else {
-			move_cursor(8,21," nao excluido, Tecle ENTER para voltar ao MENU CLIENTE\n");
-	}
-	} else {
-		printf("\n\n\n\n\n\n\tO CPF %s não foi encontrado...\n", procurado);
+			move_cursor(8,10,"Cliente excluido com sucesso\n");
+            move_cursor(8,12,"tecle ENTER para voltar ao MENU ALTERAR CLIENTE\n");	
+    	} else {
+			move_cursor(8,10,"Cliente nao excluido\n");
+            move_cursor(8,12,"tecle ENTER para voltar ao MENU ALTERAR CLIENTE\n");
+		}
+    } else {
+		printf("\n\n\n\n\n\n\tO CPF %s nao foi encontrado...\n", procurado);
 	}
 	fclose(fp);
 	free(cli);
+    getchar();
+    getchar();
+    return cli;
 }
 
+
 void exibirClientes (Cliente* cli) {
-	FILE* fp;
+    system("MODE con cols=80 lines=24");
+	system("color 3F");
+    FILE* fp;
 	fp = fopen("cliente.dat", "rb");
   
 	if(fp == NULL) {
@@ -817,7 +910,6 @@ void exibirClientes (Cliente* cli) {
 		printf("\n\n\tEncerrando o programa...");
 		exit(EXIT_FAILURE);
 	}
-	system("MODE con cols=80 lines=60");
 	move_cursor(30,1,"::: EXIBIR CLIENTES :::");
 	printf("\n\n\n");
   
@@ -834,9 +926,1142 @@ void exibirClientes (Cliente* cli) {
 }
 
 
-void move_cursor(int x, int y, char c[30]) { 
+void menuPet (void) {
+    system("MODE con cols=80 lines=24");
+	system("color 3F");
+    char op;
+    int posx = 4;
+    int posy = 6;
+    Pet* pet;
+
+    do {
+        system("cls");
+        move_cursor(30,1,"::: MENU PET :::");
+	    move_cursor(5,6,"1 - Cadastrar");
+	    move_cursor(5,8,"2 - Pesquisar");
+	    move_cursor(5,10,"3 - Alterar");
+	    move_cursor(5,12,"4 - Excluir");
+	    move_cursor(5,14,"5 - Exibir Todos");
+	    move_cursor(5,16,"Menu Principal");
+        move_cursor(38,16,"Sair");
+
+	    move_cursor(5,20,"Selecione uma opcao e tecle ENTER\n");
+        move_cursor(posx, posy, ">");
+
+        op = toupper(getch());
+
+        switch(op){
+			case 'H':
+                if (posy > 6) {
+                    move_cursor(posx, posy, " ");
+                    posy-=2;
+                    move_cursor(posx, posy, ">");            
+                }
+            break;
+			case 'P':
+                if (posy < 16) {
+                    move_cursor(posx, posy, " ");
+                    posy+=2;
+                    move_cursor(posx, posy, ">"); 
+                }
+            break;
+			case 'M':  
+                if ((posx < 38) && (posy == 16)){
+                move_cursor(posx, posy, " ");
+                posx+=33;
+                move_cursor(posx, posy, ">");             
+                }  
+            break; 
+			case 'K':          
+				if ((posx > 5) && (posy == 16)){
+                    move_cursor(posx, posy, " ");
+                    posx-=33;
+                    move_cursor(posx, posy, ">");              
+                }
+            break;
+			case 13:
+				if (posy == 6) {
+                    pet = cadastrarPet ();
+                    salvarPet (pet);
+	            }         
+				if (posy == 8) {
+                    pet = pesquisarPet ();
+                    verPet (pet);
+                }                
+                if (posy == 10) {
+                	menuAlterarPet ();
+                }                
+                if (posy == 12) {
+                    pet = excluirPet ();
+                }                
+                if (posy == 14) {
+                    exibirPets (pet);
+                }
+                if ((posx == 4) && (posy == 16)) {
+                    menuPrincipal ();
+                }
+                if ((posx == 37) && (posy == 16)) {
+                    exit(EXIT_SUCCESS);
+                }
+            break;
+
+		}
+
+    }while(1);
+    getchar();
+}
+
+
+Pet* cadastrarPet (void) {
+	Pet* pet;
+    char resp;
+    int posx = 4;
+    int posy = 6;
+    pet = (Pet*) malloc(sizeof(Pet));
+
+    system("MODE con cols=80 lines=24");
+    system("color 3F");
+    move_cursor(30,1,"::: CADASTRO DE PET :::");
+    move_cursor(5,4,"Codigo Pet: ");
+	scanf(" %d", &pet->cod);
+    move_cursor(5,6,"Nome do Proprietario: ");
+	scanf(" %50[^\n]", pet->nomeProp);
+	move_cursor(5,8,"CPF do Proprietario: ");
+    scanf(" %15[^\n]", pet->cpfProp);
+	move_cursor(5,10,"Nome: ");
+	scanf(" %10[^\n]", pet->nome);
+	move_cursor(5,12,"Especie: ");
+	scanf(" %10[^\n]", pet->esp);
+	move_cursor(5,14,"Data de Nascimento: ");
+	scanf(" %40[^\n]", pet->datanasc);
+	move_cursor(5,16,"Sexo: ");
+	scanf(" %20[^\n]", pet->sexo);
+	move_cursor(posx, posy, " ");
+	move_cursor(5,18,"Deseja salvar o cadastro (S/N)? ");
+	scanf("%c", &resp);
+	
+	resp = toupper(getche());
+	
+	if (resp == 'S') {
+		pet->status = 'c';
+		salvarPet (pet);
+		move_cursor(5,21,"Cadastro salvo, tecle ENTER para voltar ao MENU PET\n");			
+	} else {
+		move_cursor(5,21,"Cadastro cancelado, tecle ENTER para voltar ao MENU PET\n");
+	}
+	getchar();
+	return pet;
+}
+
+void salvarPet (Pet* pet) {
+	FILE* fp; 
+	fp = fopen("pet.dat", "ab"); 
+	
+	if (fp == NULL) {
+		printf("\n\n\tErro na abertura do arquivo!\n");
+		printf("\n\n\tEncerrando o programa...");
+		exit (EXIT_FAILURE);
+	
+	}
+	fwrite(pet, sizeof(Pet), 1, fp);
+	fclose(fp); 
+		
+}
+
+
+Pet* pesquisarPet (void) {
+    FILE* fp;
+    char procurado[15];
+    int achou;
+    Pet* pet;
+
+    fp = fopen("pet.dat", "rb");
+    pet = (Pet*) malloc(sizeof(Pet));
+
+    if (fp == NULL) {
+		printf("\n\n\tErro na abertura do arquivo!\n");
+		printf("\n\n\tEncerrando o programa...");
+		exit(EXIT_FAILURE);
+  	}
+    system("MODE con cols=80 lines=24");
+    system("color 3F");
+    move_cursor(30,1,"::: PESQUISAR PET :::");
+	printf("\n\n\n");
+	move_cursor(8,5,"Digite o CPF do Propietario: ");
+	scanf("%15[^\n]", procurado);
+
+    achou = 0;
+	while((!achou) && (fread(pet, sizeof(Pet), 1, fp)))  {
+   		if ((strcmp(pet->cpfProp, procurado) == 0) && (pet->status == 'c')){
+    		achou = 1;
+   		}
+  	}
+	fclose(fp);
+	if (achou){
+		verPet (pet);
+        getchar();
+		move_cursor(8,21,"Tecle ENTER para voltar ao MENU PET\n");
+  	}else{
+		move_cursor(8,21,"Pet nao cadastrado, tecle ENTER para voltar ao MENU PET\n");
+	}
+	getchar();
+    return pet;
+}
+
+
+void verPet (Pet* pet) {
+	printf("\n");
+    printf("\n\tNome do Proprietario: %s\n", pet->nomeProp);
+    printf("\n\tCodigo Pet: %d\n", pet->cod);
+	printf("\n\tNome: %s\n", pet->nome);
+	printf("\n\tEspecie: %s\n", pet->esp);
+	printf("\n\tData de Nascimento: %s\n", pet->datanasc);
+	printf("\n\tSexo: %s\n", pet->sexo);
+    printf("\t::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
+}
+
+
+void menuAlterarPet (void) {
+    system("MODE con cols=80 lines=24");
+    system("color 3F");
+    char op;
+    int posx = 4;
+    int posy = 4;
+    Pet* pet;
+
+    do {
+		system("cls");
+        move_cursor(30,1,"::: MENU ALTERAR PET :::");
+        move_cursor(5,4,"1 - Nome do Proprietario");
+	    move_cursor(5,6,"2 - CPF do Proprientario");
+	    move_cursor(5,8,"3 - Codigo Cliente");
+	    move_cursor(5,10,"4 - Nome");
+	    move_cursor(5,12,"5 - Especie");
+	    move_cursor(5,14,"6 - Data de Nascimento");
+	    move_cursor(5,16,"7 - Sexo");
+	    move_cursor(5,18,"8 - Todos os Campos");
+	    move_cursor(5,20,"Menu Pet");
+	    move_cursor(38,20,"Sair");
+	    move_cursor(5,22,"Selecione uma opcao a ser alterada e tecle ENTER\n");
+        move_cursor(posx, posy, ">");
+        
+        op = toupper(getch());
+		
+		switch(op){
+			case 'H':
+                if (posy > 4) {
+                    move_cursor(posx, posy, " ");
+                    posy-=2;
+                    move_cursor(posx, posy, ">");            
+                }
+            break;
+			case 'P':
+                if (posy < 20) {
+                    move_cursor(posx, posy, " ");
+                    posy+=2;
+                    move_cursor(posx, posy, ">"); 
+                }
+            break;
+			case 'M':  
+                if ((posx < 38) && (posy == 20)){
+                move_cursor(posx, posy, " ");
+                posx+=33;
+                move_cursor(posx, posy, ">");             
+                }  
+            break; 
+			case 'K':          
+				if ((posx > 5) && (posy == 20)){
+                    move_cursor(posx, posy, " ");
+                    posx-=33;
+                    move_cursor(posx, posy, ">");              
+                }
+            break;
+			case 13:
+				if (posy == 4) {
+					pet = altNomePropPet ();
+	            }         
+				if (posy == 6) {
+					pet = altCpfPropPet ();
+                }                
+                if (posy == 8) {
+                	pet = altCodPet ();
+                }             
+                if (posy == 10) {
+                	pet = altNomePet (); 
+                }                
+                if (posy == 12) {
+					pet = altEspPet ();
+                }
+                if (posy == 14) {
+					pet = altDataNascPet ();
+                }
+                if (posy == 16) {
+                    pet = altSexoPet ();
+                }
+                if (posy == 18) {
+					pet = altCamposPet ();
+                }
+                if ((posx == 4) && (posy == 20)) {
+                    menuPet ();
+                }
+                if ((posx == 37) && (posy == 20)) {
+                    exit(EXIT_SUCCESS);
+                }
+            break;
+		}
+		
+	}while(1);	
+	getchar();
+
+}
+
+
+Pet* altCodPet (void) {
+    system("MODE con cols=80 lines=24");
+    system("color 3F");
+    FILE* fp;
+	int achou;
+	int menusUm = -1;
+	char resp;
+	char procurado[15];
+	int posx = 4, posy = 6;
+    Pet* pet;
+	
+	fp = fopen("pet.dat", "r+b");
+	pet = (Pet*) malloc(sizeof(Pet));
+	
+	if (fp == NULL) {
+		printf("\n\n\tErro na abertura do arquivo!\n");
+		printf("\n\n\tEncerrando o programa...");
+		exit(EXIT_FAILURE);
+  	}
+    move_cursor(30,1,"::: PESQUISAR PET :::");
+	printf("\n\n\n");
+	move_cursor(8,6,"Digite o CPF do Propietario do Pet: ");
+	scanf("%15[^\n]", procurado);
+	
+	achou = 0;
+	while((!achou) && (fread(pet, sizeof(Pet), 1, fp)))  {
+		if ((strcmp(pet->cpfProp, procurado) == 0) && (pet->status == 'c')){
+    		achou = 1;
+		}
+	}
+	if(achou) {
+    	verPet (pet);
+    	move_cursor(8,21,"Deseja alterar o codigo deste Pet (S/N)? ");
+    	scanf("%c", &resp);
+    	
+    	resp = toupper(getche());
+        	
+    	if (resp == 'S') {
+    		system("cls");
+			move_cursor(30,1,"::: ALTERAR CODIGO DO PET :::");
+			printf("\n\n\n");
+			move_cursor(posx, posy, " ");
+    		move_cursor(5,4,"Codigo Pet: ");
+            scanf(" %d", &pet->cod);		
+			pet->status = 'c';
+			
+			fseek(fp, menusUm*sizeof(Pet), SEEK_CUR);
+			fwrite(pet, sizeof(Pet), 1, fp);
+			move_cursor(8,18,"Codigo alterado com sucesso\n");
+            move_cursor(8,20,"tecle ENTER para voltar ao MENU ALTERAR PET\n");	
+    	} else {
+			move_cursor(8,18,"Codigo nao alterado\n");
+            move_cursor(8,20,"tecle ENTER para voltar ao MENU ALTERAR PET\n");
+		}
+    } else {
+		printf("\n\n\n\n\n\n\tO CPF %s nao foi encontrado...\n", procurado);
+	}
+	fclose(fp);
+	free(pet);
+    getchar();
+    getchar();
+    return pet;
+}
+
+
+Pet* altNomePropPet (void) {
+    system("MODE con cols=80 lines=24");
+    system("color 3F");
+    FILE* fp;
+	int achou;
+	int menusUm = -1;
+	char resp;
+	char procurado[15];
+	int posx = 4, posy = 6;
+    Pet* pet;
+	
+	fp = fopen("pet.dat", "r+b");
+	pet = (Pet*) malloc(sizeof(Pet));
+	
+	if (fp == NULL) {
+		printf("\n\n\tErro na abertura do arquivo!\n");
+		printf("\n\n\tEncerrando o programa...");
+		exit(EXIT_FAILURE);
+  	}
+    move_cursor(30,1,"::: PESQUISAR PET :::");
+	printf("\n\n\n");
+	move_cursor(8,6,"Digite o CPF do Propietario do Pet: ");
+	scanf("%15[^\n]", procurado);
+	
+	achou = 0;
+	while((!achou) && (fread(pet, sizeof(Pet), 1, fp)))  {
+		if ((strcmp(pet->cpfProp, procurado) == 0) && (pet->status == 'c')){
+    		achou = 1;
+		}
+	}
+	if(achou) {
+    	verPet (pet);
+    	move_cursor(8,21,"Deseja alterar o nome do propietario deste Pet (S/N)? ");
+    	scanf("%c", &resp);
+    	
+    	resp = toupper(getche());
+        	
+    	if (resp == 'S') {
+    		system("cls");
+			move_cursor(30,1,"::: ALTERAR NOME DO PROPIETARIO :::");
+			printf("\n\n\n");
+			move_cursor(posx, posy, " ");
+            move_cursor(5,6,"Nome do Proprietario: ");
+            scanf(" %50[^\n]", pet->nomeProp);	
+			pet->status = 'c';
+			
+			fseek(fp, menusUm*sizeof(Pet), SEEK_CUR);
+			fwrite(pet, sizeof(Pet), 1, fp);
+			move_cursor(8,18,"Nome do propietario alterado com sucesso\n");
+            move_cursor(8,20,"tecle ENTER para voltar ao MENU ALTERAR PET\n");	
+    	} else {
+			move_cursor(8,18,"Nome do propietario nao alterado\n");
+            move_cursor(8,20,"tecle ENTER para voltar ao MENU ALTERAR PET\n");
+		}
+    } else {
+		printf("\n\n\n\n\n\n\tO CPF %s nao foi encontrado...\n", procurado);
+	}
+	fclose(fp);
+	free(pet);
+    getchar();
+    getchar();
+    return pet;
+}
+
+
+Pet* altCpfPropPet (void) {
+system("MODE con cols=80 lines=24");
+    system("color 3F");
+    FILE* fp;
+	int achou;
+	int menusUm = -1;
+	char resp;
+	char procurado[15];
+	int posx = 4, posy = 6;
+    Pet* pet;
+	
+	fp = fopen("pet.dat", "r+b");
+	pet = (Pet*) malloc(sizeof(Pet));
+	
+	if (fp == NULL) {
+		printf("\n\n\tErro na abertura do arquivo!\n");
+		printf("\n\n\tEncerrando o programa...");
+		exit(EXIT_FAILURE);
+  	}
+    move_cursor(30,1,"::: PESQUISAR PET :::");
+	printf("\n\n\n");
+	move_cursor(8,6,"Digite o CPF do Propietario do Pet: ");
+	scanf("%15[^\n]", procurado);
+	
+	achou = 0;
+	while((!achou) && (fread(pet, sizeof(Pet), 1, fp)))  {
+		if ((strcmp(pet->cpfProp, procurado) == 0) && (pet->status == 'c')){
+    		achou = 1;
+		}
+	}
+	if(achou) {
+    	verPet (pet);
+    	move_cursor(8,21,"Deseja alterar o CPF deste Pet (S/N)? ");
+    	scanf("%c", &resp);
+    	
+    	resp = toupper(getche());
+        	
+    	if (resp == 'S') {
+    		system("cls");
+			move_cursor(30,1,"::: ALTERAR CPF DO PROPIETARIO :::");
+			printf("\n\n\n");
+			move_cursor(posx, posy, " ");
+            move_cursor(5,8,"CPF do Proprietario: ");
+            scanf(" %15[^\n]", pet->cpfProp);		
+			pet->status = 'c';
+			
+			fseek(fp, menusUm*sizeof(Pet), SEEK_CUR);
+			fwrite(pet, sizeof(Pet), 1, fp);
+			move_cursor(8,18,"CPF do propietario alterado com sucesso\n");
+            move_cursor(8,20,"tecle ENTER para voltar ao MENU ALTERAR PET\n");	
+    	} else {
+			move_cursor(8,18,"CPF do propietario nao alterado\n");
+            move_cursor(8,20,"tecle ENTER para voltar ao MENU ALTERAR PET\n");
+		}
+    } else {
+		printf("\n\n\n\n\n\n\tO CPF %s nao foi encontrado...\n", procurado);
+	}
+	fclose(fp);
+	free(pet);
+    getchar();
+    getchar();
+    return pet;
+}
+
+
+Pet* altNomePet (void) {
+    system("MODE con cols=80 lines=24");
+    system("color 3F");
+    FILE* fp;
+	int achou;
+	int menusUm = -1;
+	char resp;
+	char procurado[15];
+	int posx = 4, posy = 6;
+    Pet* pet;
+	
+	fp = fopen("pet.dat", "r+b");
+	pet = (Pet*) malloc(sizeof(Pet));
+	
+	if (fp == NULL) {
+		printf("\n\n\tErro na abertura do arquivo!\n");
+		printf("\n\n\tEncerrando o programa...");
+		exit(EXIT_FAILURE);
+  	}
+    move_cursor(30,1,"::: PESQUISAR PET :::");
+	printf("\n\n\n");
+	move_cursor(8,6,"Digite o CPF do Propietario do Pet: ");
+	scanf("%15[^\n]", procurado);
+	
+	achou = 0;
+	while((!achou) && (fread(pet, sizeof(Pet), 1, fp)))  {
+		if ((strcmp(pet->cpfProp, procurado) == 0) && (pet->status == 'c')){
+    		achou = 1;
+		}
+	}
+	if(achou) {
+    	verPet (pet);
+    	move_cursor(8,21,"Deseja alterar o nome deste Pet (S/N)? ");
+    	scanf("%c", &resp);
+    	
+    	resp = toupper(getche());
+        	
+    	if (resp == 'S') {
+    		system("cls");
+			move_cursor(30,1,"::: ALTERAR NOME :::");
+			printf("\n\n\n");
+			move_cursor(posx, posy, " ");
+            move_cursor(5,10,"Nome: ");
+            scanf(" %10[^\n]", pet->nome);		
+			pet->status = 'c';
+			
+			fseek(fp, menusUm*sizeof(Pet), SEEK_CUR);
+			fwrite(pet, sizeof(Pet), 1, fp);
+			move_cursor(8,18,"Nome alterado com sucesso\n");
+            move_cursor(8,20,"tecle ENTER para voltar ao MENU ALTERAR PET\n");	
+    	} else {
+			move_cursor(8,18,"Nome nao alterado\n");
+            move_cursor(8,20,"tecle ENTER para voltar ao MENU ALTERAR PET\n");
+		}
+    } else {
+		printf("\n\n\n\n\n\n\tO CPF %s nao foi encontrado...\n", procurado);
+	}
+	fclose(fp);
+	free(pet);
+    getchar();
+    getchar();
+    return pet;
+}
+
+
+Pet* altEspPet (void) {
+    system("MODE con cols=80 lines=24");
+    system("color 3F");
+    FILE* fp;
+	int achou;
+	int menusUm = -1;
+	char resp;
+	char procurado[15];
+	int posx = 4, posy = 6;
+    Pet* pet;
+	
+	fp = fopen("pet.dat", "r+b");
+	pet = (Pet*) malloc(sizeof(Pet));
+	
+	if (fp == NULL) {
+		printf("\n\n\tErro na abertura do arquivo!\n");
+		printf("\n\n\tEncerrando o programa...");
+		exit(EXIT_FAILURE);
+  	}
+    move_cursor(30,1,"::: PESQUISAR PET :::");
+	printf("\n\n\n");
+	move_cursor(8,6,"Digite o CPF do Propietario do Pet: ");
+	scanf("%15[^\n]", procurado);
+	
+	achou = 0;
+	while((!achou) && (fread(pet, sizeof(Pet), 1, fp)))  {
+		if ((strcmp(pet->cpfProp, procurado) == 0) && (pet->status == 'c')){
+    		achou = 1;
+		}
+	}
+	if(achou) {
+    	verPet (pet);
+    	move_cursor(8,21,"Deseja alterar a especie deste Pet (S/N)? ");
+    	scanf("%c", &resp);
+    	
+    	resp = toupper(getche());
+        	
+    	if (resp == 'S') {
+    		system("cls");
+			move_cursor(30,1,"::: ALTERAR ESPECIE :::");
+			printf("\n\n\n");
+			move_cursor(posx, posy, " ");
+            scanf(" %10[^\n]", pet->nome);
+            move_cursor(5,12,"Especie: ");
+            scanf(" %10[^\n]", pet->esp);		
+			pet->status = 'c';
+			
+			fseek(fp, menusUm*sizeof(Pet), SEEK_CUR);
+			fwrite(pet, sizeof(Pet), 1, fp);
+			move_cursor(8,18,"especie alterada com sucesso\n");
+            move_cursor(8,20,"tecle ENTER para voltar ao MENU ALTERAR PET\n");	
+    	} else {
+			move_cursor(8,18,"Especie nao alterada\n");
+            move_cursor(8,20,"tecle ENTER para voltar ao MENU ALTERAR PET\n");
+		}
+    } else {
+		printf("\n\n\n\n\n\n\tO CPF %s nao foi encontrado...\n", procurado);
+	}
+	fclose(fp);
+	free(pet);
+    getchar();
+    getchar();
+    return pet;
+}
+
+
+Pet* altDataNascPet (void) {
+    system("MODE con cols=80 lines=24");
+    system("color 3F");
+    FILE* fp;
+	int achou;
+	int menusUm = -1;
+	char resp;
+	char procurado[15];
+	int posx = 4, posy = 6;
+    Pet* pet;
+	
+	fp = fopen("pet.dat", "r+b");
+	pet = (Pet*) malloc(sizeof(Pet));
+	
+	if (fp == NULL) {
+		printf("\n\n\tErro na abertura do arquivo!\n");
+		printf("\n\n\tEncerrando o programa...");
+		exit(EXIT_FAILURE);
+  	}
+    move_cursor(30,1,"::: PESQUISAR PET :::");
+	printf("\n\n\n");
+	move_cursor(8,6,"Digite o CPF do Propietario do Pet: ");
+	scanf("%15[^\n]", procurado);
+	
+	achou = 0;
+	while((!achou) && (fread(pet, sizeof(Pet), 1, fp)))  {
+		if ((strcmp(pet->cpfProp, procurado) == 0) && (pet->status == 'c')){
+    		achou = 1;
+		}
+	}
+	if(achou) {
+    	verPet (pet);
+    	move_cursor(8,21,"Deseja alterar a data de nascimento deste Pet (S/N)? ");
+    	scanf("%c", &resp);
+    	
+    	resp = toupper(getche());
+        	
+    	if (resp == 'S') {
+    		system("cls");
+			move_cursor(30,1,"::: ALTERAR DATA DE NASCIMENTO :::");
+			printf("\n\n\n");
+			move_cursor(posx, posy, " ");
+            move_cursor(5,14,"Data de Nascimento: ");
+            scanf(" %40[^\n]", pet->datanasc);		
+			pet->status = 'c';
+			
+			fseek(fp, menusUm*sizeof(Pet), SEEK_CUR);
+			fwrite(pet, sizeof(Pet), 1, fp);
+			move_cursor(8,18,"data de Nascimento alterada com sucesso\n");
+            move_cursor(8,20,"tecle ENTER para voltar ao MENU ALTERAR PET\n");	
+    	} else {
+			move_cursor(8,18,"Data de Nasciemento nao alterada\n");
+            move_cursor(8,20,"tecle ENTER para voltar ao MENU ALTERAR PET\n");
+		}
+    } else {
+		printf("\n\n\n\n\n\n\tO CPF %s nao foi encontrado...\n", procurado);
+	}
+	fclose(fp);
+	free(pet);
+    getchar();
+    getchar();
+    return pet;
+}
+
+
+Pet* altSexoPet (void) {
+    system("MODE con cols=80 lines=24");
+    system("color 3F");
+    FILE* fp;
+	int achou;
+	int menusUm = -1;
+	char resp;
+	char procurado[15];
+	int posx = 4, posy = 6;
+    Pet* pet;
+	
+	fp = fopen("pet.dat", "r+b");
+	pet = (Pet*) malloc(sizeof(Pet));
+	
+	if (fp == NULL) {
+		printf("\n\n\tErro na abertura do arquivo!\n");
+		printf("\n\n\tEncerrando o programa...");
+		exit(EXIT_FAILURE);
+  	}
+    move_cursor(30,1,"::: PESQUISAR PET :::");
+	printf("\n\n\n");
+	move_cursor(8,6,"Digite o CPF do Propietario do Pet: ");
+	scanf("%15[^\n]", procurado);
+	
+	achou = 0;
+	while((!achou) && (fread(pet, sizeof(Pet), 1, fp)))  {
+		if ((strcmp(pet->cpfProp, procurado) == 0) && (pet->status == 'c')){
+    		achou = 1;
+		}
+	}
+	if(achou) {
+    	verPet (pet);
+    	move_cursor(8,21,"Deseja alterar o sexo deste Pet (S/N)? ");
+    	scanf("%c", &resp);
+    	
+    	resp = toupper(getche());
+        	
+    	if (resp == 'S') {
+    		system("cls");
+			move_cursor(30,1,"::: ALTERAR SEXO :::");
+			printf("\n\n\n");
+			move_cursor(posx, posy, " ");
+            move_cursor(5,16,"Sexo: ");
+            scanf(" %20[^\n]", pet->sexo);			
+			pet->status = 'c';
+			
+			fseek(fp, menusUm*sizeof(Pet), SEEK_CUR);
+			fwrite(pet, sizeof(Pet), 1, fp);
+			move_cursor(8,18,"Sexo alterados com sucesso\n");
+            move_cursor(8,20,"tecle ENTER para voltar ao MENU ALTERAR PET\n");	
+    	} else {
+			move_cursor(8,18,"Sexo nao alterados\n");
+            move_cursor(8,20,"tecle ENTER para voltar ao MENU ALTERAR PET\n");
+		}
+    } else {
+		printf("\n\n\n\n\n\n\tO CPF %s nao foi encontrado...\n", procurado);
+	}
+	fclose(fp);
+	free(pet);
+    getchar();
+    getchar();
+    return pet;
+}
+
+
+Pet* altCamposPet (void) {
+    system("MODE con cols=80 lines=24");
+    system("color 3F");
+    FILE* fp;
+	int achou;
+	int menusUm = -1;
+	char resp;
+	char procurado[15];
+	int posx = 4, posy = 6;
+    Pet* pet;
+	
+	fp = fopen("pet.dat", "r+b");
+	pet = (Pet*) malloc(sizeof(Pet));
+	
+	if (fp == NULL) {
+		printf("\n\n\tErro na abertura do arquivo!\n");
+		printf("\n\n\tEncerrando o programa...");
+		exit(EXIT_FAILURE);
+  	}
+    move_cursor(30,1,"::: PESQUISAR PET :::");
+	printf("\n\n\n");
+	move_cursor(8,6,"Digite o CPF do Propietario do Pet: ");
+	scanf("%15[^\n]", procurado);
+	
+	achou = 0;
+	while((!achou) && (fread(pet, sizeof(Pet), 1, fp)))  {
+		if ((strcmp(pet->cpfProp, procurado) == 0) && (pet->status == 'c')){
+    		achou = 1;
+		}
+	}
+	if(achou) {
+    	verPet (pet);
+    	move_cursor(8,21,"Deseja alterar todos os campos deste Pet (S/N)? ");
+    	scanf("%c", &resp);
+    	
+    	resp = toupper(getche());
+        	
+    	if (resp == 'S') {
+    		system("cls");
+			move_cursor(30,1,"::: ALTERANDO CAMPOS :::");
+			printf("\n\n\n");
+			move_cursor(posx, posy, " ");
+    		move_cursor(5,4,"Codigo Pet: ");
+            scanf(" %d", &pet->cod);
+            move_cursor(5,6,"Nome do Proprietario: ");
+            scanf(" %50[^\n]", pet->nomeProp);
+            move_cursor(5,8,"CPF do Proprietario: ");
+            scanf(" %15[^\n]", pet->cpfProp);
+            move_cursor(5,10,"Nome: ");
+            scanf(" %10[^\n]", pet->nome);
+            move_cursor(5,12,"Especie: ");
+            scanf(" %10[^\n]", pet->esp);
+            move_cursor(5,14,"Data de Nascimento: ");
+            scanf(" %40[^\n]", pet->datanasc);
+            move_cursor(5,16,"Sexo: ");	
+            scanf(" %20[^\n]", pet->sexo);		
+			pet->status = 'c';
+			
+			fseek(fp, menusUm*sizeof(Pet), SEEK_CUR);
+			fwrite(pet, sizeof(Pet), 1, fp);
+			move_cursor(8,18,"Campos alterados com sucesso\n");
+            move_cursor(8,20,"tecle ENTER para voltar ao MENU ALTERAR PET\n");	
+    	} else {
+			move_cursor(8,18,"Campos nao alterados\n");
+            move_cursor(8,20,"tecle ENTER para voltar ao MENU ALTERAR PET\n");
+		}
+    } else {
+		printf("\n\n\n\n\n\n\tO CPF %s nao foi encontrado...\n", procurado);
+	}
+	fclose(fp);
+	free(pet);
+    getchar();
+    getchar();
+    return pet;
+}
+
+
+Pet* excluirPet (void) {
+    system("MODE con cols=80 lines=24");
+    system("color 3F");
+    Pet* pet;
+    FILE* fp;
+	int achou;
+	int menusUm = -1;
+	char resp;
+	char procurado[15];
+	
+	fp = fopen("pet.dat", "r+b");
+	
+	if (fp == NULL) {
+		printf("\n\n\tErro na abertura do arquivo!\n");
+		printf("\n\n\tEncerrando o programa...");
+		exit(EXIT_FAILURE);
+	}
+  	
+	move_cursor(30,1,"::: PESQUISAR PET :::");
+	printf("\n\n\n");
+	move_cursor(8,6,"Digite o CPF do Propietario do Pet: ");
+	scanf("%15[^\n]", procurado);
+	pet = (Pet*) malloc(sizeof(Pet));
+  	achou = 0;
+	while((!achou) && (fread(pet, sizeof(Pet), 1, fp)))  {
+   		if ((strcmp(pet->cpfProp, procurado) == 0) && (pet->status == 'c')){
+    		achou = 1;
+   		}
+  	}
+	if(achou) {
+		verPet (pet);
+		move_cursor(8,20,"Deseja excluir este pet (S/N)? ");
+		scanf("%c", &resp);
+		
+		resp = toupper(getche());
+		
+		if(resp == 'S') {
+			system("cls");
+			move_cursor(30,1,"::: EXCLUINDO CADASTRO :::");
+			pet->status = 'n';
+			
+			fseek(fp, menusUm*sizeof(Pet), SEEK_CUR);
+			fwrite(pet, sizeof(Pet), 1, fp);
+			
+			move_cursor(8,10,"Pet excluido com sucesso\n");
+            move_cursor(8,12,"tecle ENTER para voltar ao MENU ALTERAR CLIENTE\n");	
+    	} else {
+			move_cursor(8,10,"Pet nao excluido\n");
+            move_cursor(8,12,"tecle ENTER para voltar ao MENU ALTERAR CLIENTE\n");
+		}
+    } else {
+		printf("\n\n\n\n\n\n\tO CPF %s nao foi encontrado...\n", procurado);
+	}
+	fclose(fp);
+	free(pet);
+    getchar();
+    getchar();
+    return pet;
+}
+
+void exibirPets (Pet* pet) {
+    system("MODE con cols=80 lines=24");
+	system("color 3F");
+    FILE* fp;
+	fp = fopen("pet.dat", "rb");
+  
+	if(fp == NULL) {
+		printf("\n\n\tErro na abertura do arquivo!\n");
+		printf("\n\n\tEncerrando o programa...");
+		exit(EXIT_FAILURE);
+	}
+	move_cursor(30,1,"::: EXIBIR PETS :::");
+	printf("\n\n\n");
+  
+	pet = (Pet*) malloc(sizeof(Pet));
+  
+	while(fread(pet, sizeof(Pet), 1, fp)) {
+		if (pet->status == 'c') {
+			verPet(pet);
+		}
+	}
+	fclose(fp);
+	free(pet);
+    getchar();
+}
+
+
+void menuServicos (void) {
+    system("MODE con cols=80 lines=24");
+	system("color 3F");
+    char op;
+    int posx = 4;
+    int posy = 6;
+
+    do {
+        system("cls");
+        move_cursor(30,1,"::: MENU SERVICOS :::");
+	    move_cursor(5,6,"1 - Cadastrar");
+	    move_cursor(5,8,"2 - Pesquisar");
+	    move_cursor(5,10,"3 - Alterar");
+	    move_cursor(5,12,"4 - Excluir");
+	    move_cursor(5,14,"5 - Exibir Todos");
+	    move_cursor(5,16,"Menu Principal");
+        move_cursor(38,16,"Sair");
+
+	    move_cursor(5,20,"Selecione uma opcao e tecle ENTER\n");
+        move_cursor(posx, posy, ">");
+
+        op = toupper(getch());
+
+        switch(op){
+			case 'H':
+                if (posy > 6) {
+                    move_cursor(posx, posy, " ");
+                    posy-=2;
+                    move_cursor(posx, posy, ">");            
+                }
+            break;
+			case 'P':
+                if (posy < 16) {
+                    move_cursor(posx, posy, " ");
+                    posy+=2;
+                    move_cursor(posx, posy, ">"); 
+                }
+            break;
+			case 'M':  
+                if ((posx < 38) && (posy == 16)){
+                move_cursor(posx, posy, " ");
+                posx+=33;
+                move_cursor(posx, posy, ">");             
+                }  
+            break; 
+			case 'K':          
+				if ((posx > 5) && (posy == 16)){
+                    move_cursor(posx, posy, " ");
+                    posx-=33;
+                    move_cursor(posx, posy, ">");              
+                }
+            break;
+			case 13:
+				if (posy == 6) {
+                    
+	            }         
+				if (posy == 8) {
+                    
+                }                
+                if (posy == 10) {
+                	   
+                }                
+                if (posy == 12) {
+                    
+                }                
+                if (posy == 14) {
+                    
+                }
+                if ((posx == 4) && (posy == 16)) {
+                    menuPrincipal ();
+                }
+                if ((posx == 37) && (posy == 16)) {
+                    exit(EXIT_SUCCESS);
+                }
+            break;
+
+		}
+
+    }while(1);
+    getchar();
+}
+
+
+
+void menuAgendamentos (void) {
+    system("MODE con cols=80 lines=24");
+	system("color 3F");
+    char op;
+    int posx = 4;
+    int posy = 6;
+
+    do {
+        system("cls");
+        move_cursor(30,1,"::: MENU AGENDAMENTOS :::");
+	    move_cursor(5,6,"1 - Cadastrar");
+	    move_cursor(5,8,"2 - Pesquisar");
+	    move_cursor(5,10,"3 - Alterar");
+	    move_cursor(5,12,"4 - Excluir");
+	    move_cursor(5,14,"5 - Exibir Todos");
+	    move_cursor(5,16,"Menu Principal");
+        move_cursor(38,16,"Sair");
+
+	    move_cursor(5,20,"Selecione uma opcao e tecle ENTER\n");
+        move_cursor(posx, posy, ">");
+
+        op = toupper(getch());
+
+        switch(op){
+			case 'H':
+                if (posy > 6) {
+                    move_cursor(posx, posy, " ");
+                    posy-=2;
+                    move_cursor(posx, posy, ">");            
+                }
+            break;
+			case 'P':
+                if (posy < 16) {
+                    move_cursor(posx, posy, " ");
+                    posy+=2;
+                    move_cursor(posx, posy, ">"); 
+                }
+            break;
+			case 'M':  
+                if ((posx < 38) && (posy == 16)){
+                move_cursor(posx, posy, " ");
+                posx+=33;
+                move_cursor(posx, posy, ">");             
+                }  
+            break; 
+			case 'K':          
+				if ((posx > 5) && (posy == 16)){
+                    move_cursor(posx, posy, " ");
+                    posx-=33;
+                    move_cursor(posx, posy, ">");              
+                }
+            break;
+			case 13:
+				if (posy == 6) {
+                    
+	            }         
+				if (posy == 8) {
+                    
+                }                
+                if (posy == 10) {
+                	   
+                }                
+                if (posy == 12) {
+                    
+                }                
+                if (posy == 14) {
+                    
+                }
+                if ((posx == 4) && (posy == 16)) {
+                    menuPrincipal ();
+                }
+                if ((posx == 37) && (posy == 16)) {
+                    exit(EXIT_SUCCESS);
+                }
+            break;
+
+		}
+
+    }while(1);
+    getchar();
+}
+
+
+void menuInformacoes (void) {
+    system("MODE con cols=80 lines=24");
+	system("color 3F");
+    char op;
+    int posx = 4;
+    int posy = 16;
+
+    do {
+        system("cls");
+        move_cursor(20,1,"::: MENU INFORMACOES SOBRE O SISTEMA :::");
+        move_cursor(5,5,"Versao: 2.0.0");
+        move_cursor(5,6,"Desenvolvido por Raquel Lima Fernandes");
+        move_cursor(5,7,"Para o Projeto da Disciplina de Programacao");
+        move_cursor(5,8,"Professor Flavius Gorgonio");
+        move_cursor(5,9,"UFRN/CERES Campus Caico, BSI 2019.2");
+        move_cursor(5,10,"Data de Terminio parte 02: 29/10/2019");
+        move_cursor(5,12,"Codigo Disponivel em: https://github.com/raquel-lima/SIG-Projeto");
+	    move_cursor(5,16,"Menu Principal");
+        move_cursor(38,16,"Sair");
+
+	    move_cursor(5,20,"Selecione uma opcao e tecle ENTER\n");
+        move_cursor(posx, posy, ">");
+
+        op = toupper(getch());
+
+        switch(op){
+			case 'M':  
+                if ((posx < 38) && (posy == 16)){
+                move_cursor(posx, posy, " ");
+                posx+=33;
+                move_cursor(posx, posy, ">");             
+                }  
+            break; 
+			case 'K':          
+				if ((posx > 5) && (posy == 16)){
+                    move_cursor(posx, posy, " ");
+                    posx-=33;
+                    move_cursor(posx, posy, ">");              
+                }
+            break;
+			case 13:
+                if ((posx == 4) && (posy == 16)) {
+                    menuPrincipal ();
+                }
+                if ((posx == 37) && (posy == 16)) {
+                    exit(EXIT_SUCCESS);
+                }
+            break;
+
+		}
+
+    }while(1);
+    getchar();
+}
+
+void move_cursor (int x, int y, char c[30]) { 
     HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
     COORD position = {x,y};
     SetConsoleCursorPosition(hStdout, position);
     printf("%s", c);   
 }
+
