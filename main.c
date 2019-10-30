@@ -32,30 +32,20 @@ typedef struct pet {
     char status;
 }Pet;
 
-typedef struct servico {
-    int cod;
-    char tipo[15];
-    float preco;
+typedef struct servicos {
+	char tipo[20];
+	char nomeProp[50];
+	char cpfProp[15];
+	char nomePet[10];
+	char esp[10];
+	char sexo[2];
+	char obs[100];
 }Servicos;
-
-typedef struct agendamento {
-    int cod;
-    int codCliente;
-    char nomeCliente[50];
-    char cpfCliente[50];
-    int codPet;
-    char nome[10];
-    char esp[10];
-    char sexo[2];
-    int codServico;
-    char tipo[10];
-    float preco;
-    Data agendamento;
-}Agendamento;
 
 
 void move_cursor (int x, int y, char c[10]);
 void menuPrincipal (void);
+void login (void);
 void menuCliente (void);
 Cliente* cadastrarCliente (void);
 void salvarCliente (Cliente*);
@@ -89,18 +79,58 @@ Pet* altCamposPet (void);
 Pet* excluirPet (void);
 void exibirPets (Pet* pet);
 
-void menuServicos (void);
 void menuAgendamentos (void);
+void menuAgendarServicos (void);
+
 void menuInformacoes (void);
 
 
 int main (void) {
 
-    menuPrincipal ();
+    login ();
     getchar();
     return 0;
 }
 
+
+void login(){
+	system("MODE con cols=80 lines=24");
+    system("color 3F");
+    char op;
+    int posx = 4;
+    int posy = 6;
+	char c;
+	char login[] = "raquel@";
+	char senha[] = "12345"; 
+	int a = 10;
+	int b = 10;
+	int i = 0;
+	int verifica_senha = 0;
+	while(verifica_senha == 0){
+  	move_cursor(30,1,"::: LOGIN :::");
+    move_cursor(5,6,"Login: ");
+    gets(login);
+    move_cursor(5,8,"Senha: ");
+    while((c = getch()) != 13){ 
+		senha[i] = c;
+		i++;
+		printf("*");  
+    }
+    senha[i] = '\0';
+    i = 0;
+    system("cls");
+    a = strcmp(login,"raquel@");
+    b = strcmp(senha,"12345");
+    if(a == 0 && b == 0){
+    menuPrincipal();
+    verifica_senha = 1;
+    }else{
+		move_cursor(5,12,"Senha invalida!");
+      fflush(stdout);		
+	}
+    printf("\n");
+	} 
+}
 
 void menuPrincipal (void) {
     system("MODE con cols=80 lines=24");
@@ -111,14 +141,14 @@ void menuPrincipal (void) {
 
     do {
         system("cls");
-        move_cursor(30,1,"::: MENU PRINCIPAL :::");
+		move_cursor(31,1,"::: SIG PET SHOP :::");
+        move_cursor(30,2,"::: MENU PRINCIPAL :::");
 	    move_cursor(5,6,"1 - Cliente");
 	    move_cursor(5,8,"2 - Pet");
-	    move_cursor(5,10,"3 - Servicos");
-	    move_cursor(5,12,"4 - Agendamentos");
-	    move_cursor(5,14,"5 - Informacoes sobre o Sistema");
-	    move_cursor(5,16,"Sair");
-	    move_cursor(5,20,"Selecione uma opcao e tecle ENTER\n");
+	    move_cursor(5,10,"3 - Agendamentos");
+	    move_cursor(5,12,"4 - Informacoes sobre o Sistema");
+	    move_cursor(5,14,"Sair");
+	    move_cursor(5,18,"Selecione uma opcao e tecle ENTER\n");
         move_cursor(posx, posy, ">");
 
         op = toupper(getch());
@@ -132,7 +162,7 @@ void menuPrincipal (void) {
                 }
             break;
 			case 'P':
-                if (posy < 16) {
+                if (posy < 14) {
                     move_cursor(posx, posy, " ");
                     posy+=2;
                     move_cursor(posx, posy, ">"); 
@@ -144,17 +174,14 @@ void menuPrincipal (void) {
 	            }         
 				if (posy == 8) {
                     menuPet ();
-                }                
+                }                                
                 if (posy == 10) {
-                    menuServicos ();
-                }                
-                if (posy == 12) {
                     menuAgendamentos ();
                 }                
-                if (posy == 14) {
+                if (posy == 12) {
                     menuInformacoes ();
                 }
-                if (posy == 16) {
+                if (posy == 14) {
                     exit(EXIT_SUCCESS);
                 }
             break;
@@ -1655,7 +1682,7 @@ Pet* altSexoPet (void) {
 			
 			fseek(fp, menusUm*sizeof(Pet), SEEK_CUR);
 			fwrite(pet, sizeof(Pet), 1, fp);
-			move_cursor(8,18,"Sexo alterados com sucesso\n");
+			move_cursor(8,18,"Sexo alterado com sucesso\n");
             move_cursor(8,20,"tecle ENTER para voltar ao MENU ALTERAR PET\n");	
     	} else {
 			move_cursor(8,18,"Sexo nao alterados\n");
@@ -1836,7 +1863,9 @@ void exibirPets (Pet* pet) {
 }
 
 
-void menuServicos (void) {
+
+
+void menuAgendamentos (void) {
     system("MODE con cols=80 lines=24");
 	system("color 3F");
     char op;
@@ -1845,12 +1874,12 @@ void menuServicos (void) {
 
     do {
         system("cls");
-        move_cursor(30,1,"::: MENU SERVICOS :::");
-	    move_cursor(5,6,"1 - Cadastrar");
-	    move_cursor(5,8,"2 - Pesquisar");
+        move_cursor(30,1,"::: MENU AGENDAMENTOS :::");
+		move_cursor(5,6,"1 - Agendar Servico");
+	    move_cursor(5,8,"2 - Pesquisar ");
 	    move_cursor(5,10,"3 - Alterar");
 	    move_cursor(5,12,"4 - Excluir");
-	    move_cursor(5,14,"5 - Exibir Todos");
+	    move_cursor(5,14,"5 - Listar Todos");
 	    move_cursor(5,16,"Menu Principal");
         move_cursor(38,16,"Sair");
 
@@ -1890,7 +1919,7 @@ void menuServicos (void) {
             break;
 			case 13:
 				if (posy == 6) {
-                    
+                    menuAgendarServicos ();
 	            }         
 				if (posy == 8) {
                     
@@ -1919,87 +1948,29 @@ void menuServicos (void) {
 }
 
 
-
-void menuAgendamentos (void) {
+void menuAgendarServicos (void) {
     system("MODE con cols=80 lines=24");
 	system("color 3F");
-    char op;
+
     int posx = 4;
-    int posy = 6;
+    int posy = 5;
+	system("cls");
+	move_cursor(30,1,"::: AGENDAR SERVICOS :::");
+	move_cursor(5,6,"----------------|----------------------------------|-----------------");
+	move_cursor(5,5,"PET SHOP");
+	move_cursor(5,7,"Banho e Tosa");
+	move_cursor(35,5,"CLINICA");
+	move_cursor(35,7,"Consulta");
+	move_cursor(35,8,"Exames");
+	move_cursor(35,9,"Vacinas");
+	move_cursor(35,10,"Vermifogos/Antipulgas");
+	move_cursor(35,11,"Cirurgias");
+	move_cursor(35,12,"Pesagens");
+	move_cursor(65,5,"PRODUTOS");
+	move_cursor(65,7,"Racao");
+	move_cursor(65,8,"Brinquedos");
 
-    do {
-        system("cls");
-        move_cursor(30,1,"::: MENU AGENDAMENTOS :::");
-	    move_cursor(5,6,"1 - Cadastrar");
-	    move_cursor(5,8,"2 - Pesquisar");
-	    move_cursor(5,10,"3 - Alterar");
-	    move_cursor(5,12,"4 - Excluir");
-	    move_cursor(5,14,"5 - Exibir Todos");
-	    move_cursor(5,16,"Menu Principal");
-        move_cursor(38,16,"Sair");
-
-	    move_cursor(5,20,"Selecione uma opcao e tecle ENTER\n");
-        move_cursor(posx, posy, ">");
-
-        op = toupper(getch());
-
-        switch(op){
-			case 'H':
-                if (posy > 6) {
-                    move_cursor(posx, posy, " ");
-                    posy-=2;
-                    move_cursor(posx, posy, ">");            
-                }
-            break;
-			case 'P':
-                if (posy < 16) {
-                    move_cursor(posx, posy, " ");
-                    posy+=2;
-                    move_cursor(posx, posy, ">"); 
-                }
-            break;
-			case 'M':  
-                if ((posx < 38) && (posy == 16)){
-                move_cursor(posx, posy, " ");
-                posx+=33;
-                move_cursor(posx, posy, ">");             
-                }  
-            break; 
-			case 'K':          
-				if ((posx > 5) && (posy == 16)){
-                    move_cursor(posx, posy, " ");
-                    posx-=33;
-                    move_cursor(posx, posy, ">");              
-                }
-            break;
-			case 13:
-				if (posy == 6) {
-                    
-	            }         
-				if (posy == 8) {
-                    
-                }                
-                if (posy == 10) {
-                	   
-                }                
-                if (posy == 12) {
-                    
-                }                
-                if (posy == 14) {
-                    
-                }
-                if ((posx == 4) && (posy == 16)) {
-                    menuPrincipal ();
-                }
-                if ((posx == 37) && (posy == 16)) {
-                    exit(EXIT_SUCCESS);
-                }
-            break;
-
-		}
-
-    }while(1);
-    getchar();
+	getchar();
 }
 
 
