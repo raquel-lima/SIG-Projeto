@@ -25,6 +25,7 @@ void editaObservacoesPet (void);
 void excluirPet (void);
 
 int dataCadastroPet(Pet*);
+int dataSistema(void);
 
 
 void menuPet (void) {
@@ -33,7 +34,7 @@ void menuPet (void) {
 	do { 
 		system("cls || clear");
         printf("\n\t------------------------------------\n");
-        printf("\t\t\t   PET");
+        printf("\tPET                                     ");
         printf("\n\t------------------------------------\n\n\n");
 		puts("\t1. Cadastrar Novo Pet");
         puts("\t2. Exibir Pets");
@@ -88,7 +89,7 @@ Pet* inserePet (void) {
 
     system("cls || clear");
     printf("\n\t------------------------------------\n");
-    printf("\t\t\t   NOVO PET");
+    printf("\tNOVO PET                                ");
     printf("\n\t------------------------------------\n\n\n");
 	printf("\tNome do Responsavel: ");
 	scanf("	%51[^\n]", pet->nomeResponsavel);
@@ -183,7 +184,7 @@ void listaPets(Pet* pet){
   	}
 	system("cls||clear");
 	printf("\n\t------------------------------------------------\n");
-	printf("\t\t\t   LISTA DE PETS");
+	printf("\tLISTA DE PETS                                       ");
 	printf("\n\t------------------------------------------------\n\n\n");
 	while (fread(pet, sizeof(Pet), 1, arqp)) {
 		if (pet->status == 'a') {
@@ -214,7 +215,7 @@ void buscaPet (void) {
   	}
 	system("cls||clear");
 	printf("\n\t-----------------------------------\n");
-	printf("\t\t\t   PESQUISA PET");
+	printf("\tPESQUISA PET                           ");
 	printf("\n\t-----------------------------------\n\n\n");
 	printf("\tDigite o CPF Responsavel Legal pelo Pet: ");
 	scanf(" %12[^\n]", busca);
@@ -243,7 +244,7 @@ void alteraPet (void){
 	do{ 
 		system("cls||clear");
 		printf("\n\t-----------------------------------\n");
-		printf("\t\t\t   ALTERAR DADOS DO PET");
+		printf("\tALTERAR DADOS DO PET                   ");
 		printf("\n\t-----------------------------------\n\n\n");
 		puts("\t1. Nome do Responsavel Legal");
         puts("\t2. CPF do Responsavel Legal");
@@ -317,7 +318,7 @@ void editaNomeResponsavelPet (void) {
   	}
 	system("cls||clear");
 	printf("\n\t-----------------------------------\n");
-	printf("\t  PESQUISA RESPONSAVEL PELO PET");
+	printf("\tPESQUISA RESPONSAVEL PELO PET          ");
 	printf("\n\t-----------------------------------\n\n\n");
 	printf("\tDigite o CPF do Resposnsavel Legal pelo Pet: ");
 	scanf(" %12[^\n]", busca);
@@ -337,7 +338,7 @@ void editaNomeResponsavelPet (void) {
 		if(resp == 'S' || resp == 's'){   
 			system("cls||clear");
 			printf("\n\t-----------------------------------\n");
-			printf("\t\t   ALTERANDO NOME");
+			printf("\tALTERANDO NOME                         ");
 			printf("\n\t-----------------------------------\n\n\n");
 			printf("\n\tNovo Nome: ");
 			scanf(" %51[^\n]",pet->nomeResponsavel);
@@ -376,7 +377,7 @@ void editaCPFResponsavelPet (void) {
   	}
 	system("cls||clear");
 	printf("\n\t-----------------------------------\n");
-	printf("\t  PESQUISA RESPONSAVEL PELO PET");
+	printf("\tPESQUISA RESPONSAVEL PELO PET          ");
 	printf("\n\t-----------------------------------\n\n\n");
 	printf("\tDigite o CPF do Resposnsavel Legal pelo Pet: ");
 	scanf(" %12[^\n]", busca);
@@ -396,7 +397,7 @@ void editaCPFResponsavelPet (void) {
 		if (resp == 'S' || resp == 's') {   
 			system("cls||clear");
 			printf("\n\t-----------------------------------\n");
-			printf("\t\t   ALTERANDO CPF");
+			printf("\tALTERANDO CPF                          ");
 			printf("\n\t-----------------------------------\n\n\n");
 			printf("\n\tNovo CPF: ");
 			scanf(" %12[^\n]",pet->cpfResponsavel);
@@ -437,7 +438,7 @@ void editaCodigoPet (void) {
   	}
 	system("cls||clear");
 	printf("\n\t-----------------------------------\n");
-	printf("\t  PESQUISA RESPONSAVEL PELO PET");
+	printf("\tPESQUISA RESPONSAVEL PELO PET          ");
 	printf("\n\t-----------------------------------\n\n\n");
 	printf("\tDigite o CPF do Resposnsavel Legal pelo Pet: ");
 	scanf(" %12[^\n]", busca);
@@ -457,7 +458,7 @@ void editaCodigoPet (void) {
 		if(resp == 'S' || resp == 's'){   
 			system("cls||clear");
 			printf("\n\t-----------------------------------\n");
-			printf("\t\t   ALTERANDO CODIGO");
+			printf("\tALTERANDO CODIGO                       ");
 			printf("\n\t-----------------------------------\n\n\n");
 			printf("\n\tNovo Codigo: ");
 			scanf(" %3[^\n]",pet->codigo);
@@ -497,7 +498,7 @@ void editaNomePet (void) {
   	}
 	system("cls||clear");
 	printf("\n\t-----------------------------------\n");
-	printf("\t  PESQUISA RESPONSAVEL PELO PET");
+	printf("\tPESQUISA RESPONSAVEL PELO PET          ");
 	printf("\t\t-----------------------------------\n\n\n");
 	printf("\tDigite o CPF do Resposnsavel Legal pelo Pet: ");
 	scanf(" %12[^\n]", busca);
@@ -517,7 +518,7 @@ void editaNomePet (void) {
 		if(resp == 'S' || resp == 's'){   
 			system("cls||clear");
 			printf("\n\t-----------------------------------\n");
-			printf("\t\t   ALTERANDO NOME");
+			printf("\tALTERANDO NOME                         ");
 			printf("\n\t-----------------------------------\n\n\n");
 			printf("\n\tNovo Nome: ");
 			scanf(" %10[^\n]",pet->nome);
@@ -556,7 +557,7 @@ void editaEspeciePet (void) {
   	}
 	system("cls||clear");
 	printf("\n\t-----------------------------------\n");
-	printf("\t  PESQUISA RESPONSAVEL PELO PET");
+	printf("\tPESQUISA RESPONSAVEL PELO PET          ");
 	printf("\n\t-----------------------------------\n\n\n");
 	printf("\tDigite o CPF do Resposnsavel Legal pelo Pet: ");
 	scanf(" %12[^\n]", busca);
@@ -576,7 +577,7 @@ void editaEspeciePet (void) {
 		if (resp == 'S' || resp == 's') {   
 			system("cls||clear");
 			printf("\n\t-----------------------------------\n");
-			printf("\t\t   ALTERANDO ESPECIE");
+			printf("\tALTERANDO ESPECIE                      ");
 			printf("\n\t-----------------------------------\n\n\n");
 			printf("\n\tNova Especie: ");
 			scanf(" %10[^\n]",pet->especie);
@@ -616,7 +617,7 @@ void editaDataNascimentoPet (void) {
   	}
 	system("cls||clear");
 	printf("\n\t-----------------------------------\n");
-	printf("\t  PESQUISA RESPONSAVEL PELO PET");
+	printf("\tPESQUISA RESPONSAVEL PELO PET          ");
 	printf("\n\t-----------------------------------\n\n\n");
 	printf("\tDigite o CPF do Resposnsavel Legal pelo Pet: ");
 	scanf(" %12[^\n]", busca);
@@ -636,7 +637,7 @@ void editaDataNascimentoPet (void) {
 		if(resp == 'S' || resp == 's'){   
 			system("cls||clear");
 			printf("\n\t-----------------------------------\n");
-			printf("\t  ALTERANDO DATA DE NASCIMENTO");
+			printf("\tALTERANDO DATA DE NASCIMENTO           ");
 			printf("\n\t-----------------------------------\n\n\n");
 			printf("\n\tNova Data de Nasciemento: ");
 			scanf(" %9[^\n]",pet->datanasc);
@@ -675,7 +676,7 @@ void editaSexoPet (void) {
   	}
 	system("cls||clear");
 	printf("\n\t-----------------------------------\n");
-	printf("\t  PESQUISA RESPONSAVEL PELO PET");
+	printf("\tPESQUISA RESPONSAVEL PELO PET          ");
 	printf("\n\t-----------------------------------\n\n\n");
 	printf("\tDigite o CPF do Resposnsavel Legal pelo Pet: ");
 	scanf(" %12[^\n]", busca);
@@ -695,7 +696,7 @@ void editaSexoPet (void) {
 		if (resp == 'S' || resp == 's') {   
 			system("cls||clear");
 			printf("\n\t-----------------------------------\n");
-			printf("\t      ALTERANDO O SEXO DO PET");
+			printf("\tALTERANDO O SEXO DO PET                ");
 			printf("\n\t-----------------------------------\n\n\n");
 			printf("\n\tNovo Sexo: ");
 			scanf(" %2[^\n]",pet->sexo);
@@ -736,7 +737,7 @@ void editaObservacoesPet (void) {
   	}
 	system("cls||clear");
 	printf("\n\t-----------------------------------\n");
-	printf("\t  PESQUISA RESPONSAVEL PELO PET");
+	printf("\tPESQUISA RESPONSAVEL PELO PET          ");
 	printf("\n\t-----------------------------------\n\n\n");
 	printf("\tDigite o CPF do Resposnsavel Legal pelo Pet: ");
 	scanf(" %12[^\n]", busca);
@@ -756,7 +757,7 @@ void editaObservacoesPet (void) {
 		if (resp == 'S' || resp == 's') {   
 			system("cls||clear");
 			printf("\n\t-----------------------------------\n");
-			printf("\t  ALTERANDO AS OBSERVACOES DO PET");
+			printf("\tALTERANDO AS OBSERVACOES DO PET        ");
 			printf("\n\t-----------------------------------\n\n\n");
 			printf("\n\tNovo Observacao: ");
 			scanf(" %100[^\n]",pet->observacoes);
@@ -795,7 +796,7 @@ void editaTodosPet (void) {
   	}
 	system("cls||clear");
 	printf("\n\t-----------------------------------\n");
-	printf("\t  PESQUISA RESPONSAVEL PELO PET");
+	printf("\tPESQUISA RESPONSAVEL PELO PET          ");
 	printf("\n\t-----------------------------------\n\n\n");
 	printf("\tDigite o CPF do Resposnsavel Legal pelo Pet: ");
 	scanf(" %12[^\n]", busca);
@@ -815,7 +816,7 @@ void editaTodosPet (void) {
 		if(resp == 'S' || resp == 's'){   
 			system("cls||clear");
 			printf("\n\t-----------------------------------\n");
-			printf("\t  ALTERANDO TODOS OS CAMPOS DO PET");
+			printf("\tALTERANDO TODOS OS CAMPOS DO PET       ");
 			printf("\n\t-----------------------------------\n\n\n");
 			printf("\n\tNovo Observacao: ");
 			scanf(" %100[^\n]",pet->observacoes);
@@ -855,7 +856,7 @@ void excluirPet (void) {
   	}
 	system("cls || clear");
 	printf("\n\t-----------------------------------\n");
-	printf("\t   PESQUISA RESPONSAVEL PELO PET");
+	printf("\tPESQUISA RESPONSAVEL PELO PET          ");
 	printf("\n\t-----------------------------------\n\n\n");
 	printf("\tDigite o CPF do Resposnsavel legal pelo Pet: ");
 	scanf(" %12[^\n]", busca);
@@ -907,3 +908,12 @@ int dataCadastroPet(Pet* pet){
 }
 
 
+int dataSistema(void) {
+	struct tm* t;
+	time_t rawtime;
+	time(&rawtime);
+	t = localtime(&rawtime);
+	int retorno = mktime(t);
+
+	return retorno/86400;
+}

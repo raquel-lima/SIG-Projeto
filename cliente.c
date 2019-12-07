@@ -29,7 +29,7 @@ void menuCliente (void) {
 	do { 
 		system("cls || clear");
         printf("\n\t------------------------------------\n");
-        printf("\t\t   CLIENTE");
+        printf("\tCLIENTE                                 ");
         printf("\n\t------------------------------------\n\n\n");
 		puts("\t1. Cadastrar Novo Cliente");
         puts("\t2. Exibir Clientes");
@@ -85,7 +85,7 @@ Cliente* insereCliente (void) {
 
     system("cls || clear");
     printf("\n\t------------------------------------\n");
-    printf("\t\t   NOVO CLIENTE");
+    printf("\tNOVO CLIENTE                            ");
     printf("\n\t------------------------------------\n\n\n");
 	printf("\tCodigo Cliente: ");
     scanf("	%3[^\n]", cli->codigo);
@@ -176,7 +176,7 @@ void listaClientes (Cliente* cli) {
   	}
 	system("cls||clear");
 	printf("\n\t----------------------------------------------\n");
-	printf("\t\t   LISTA DE CLIENTES");
+	printf("\tLISTA DE CLIENTES                                 ");
 	printf("\n\t------------------------------------------------\n\n\n");
 	while(fread(cli, sizeof(Cliente), 1, arqc)){
 		if(cli->status != 'd'){
@@ -207,7 +207,7 @@ void buscaCliente(void){
   	}
     system("cls || clear");
     printf("\n\t------------------------------------\n");
-    printf("\t\t   PESQUISA CLIENTE");
+    printf("\tPESQUISA CLIENTE                        ");
     printf("\n\t------------------------------------\n\n\n");
 	printf("\tDigite o CPF do Cliente: ");
 	scanf(" %12[^\n]", busca);
@@ -236,7 +236,7 @@ void alteraCliente (void) {
 	do { 
 		system("cls||clear");
 		printf("\n\t-----------------------------------\n");
-		printf("\t\t   ALTERAR DADOS DO CLIENTE");
+		printf("\tALTERAR DADOS DO CLIENTE               ");
 		printf("\n\t-----------------------------------\n\n\n");
 		puts("\t1. Codigo do Cliente");
         puts("\t2. Nome");
@@ -303,7 +303,7 @@ void editaCodigoCliente (void) {
   	}
 	system("cls||clear");
 	printf("\n\t-----------------------------------\n");
-	printf("\t\tPESQUISA CLIENTE");
+	printf("\tPESQUISA CLIENTE                       ");
 	printf("\n\t-----------------------------------\n\n\n");
 	printf("\tDigite o CPF do Cliente: ");
 	scanf(" %12[^\n]", busca);
@@ -323,7 +323,7 @@ void editaCodigoCliente (void) {
 		if(resp == 'S' || resp == 's'){   
 			system("cls||clear");
 			printf("\n\t-----------------------------------\n");
-			printf("\t\t   ALTERANDO CODIGO");
+			printf("\tALTERANDO CODIGO                       ");
 			printf("\n\t-----------------------------------\n\n\n");
 			printf("\n\tNovo Codigo: ");
 			scanf(" %3[^\n]",cli->codigo);
@@ -364,7 +364,7 @@ void editaNomeCliente (void) {
   	}
 	system("cls||clear");
 	printf("\n\t-----------------------------------\n");
-	printf("\t\t   PESQUISA CLIENTE");
+	printf("\tPESQUISA CLIENTE                       ");
 	printf("\n\t-----------------------------------\n\n\n");
 	printf("\tDigite o CPF do Cliente: ");
 	scanf(" %12[^\n]", busca);
@@ -384,7 +384,7 @@ void editaNomeCliente (void) {
 		if(resp == 'S' || resp == 's'){   
 			system("cls||clear");
 			printf("\n\t-----------------------------------\n");
-			printf("\t\t   ALTERANDO NOME");
+			printf("\tALTERANDO NOME                         ");
 			printf("\n\t-----------------------------------\n\n\n");
 			printf("\n\tNovo Nome: ");
 			scanf(" %51[^\n]",cli->nome);
@@ -426,7 +426,7 @@ void editaEnderecoCliente (void) {
   	}
 	system("cls||clear");
 	printf("\n\t-----------------------------------\n");
-	printf("\t\t   PESQUISA CLIENTE");
+	printf("\tPESQUISA CLIENTE                       ");
 	printf("\n\t-----------------------------------\n\n\n");
 	printf("\tDigite o CPF do Cliente: ");
 	scanf(" %12[^\n]", busca);
@@ -446,7 +446,7 @@ void editaEnderecoCliente (void) {
 		if(resp == 'S' || resp == 's'){   
 			system("cls||clear");
 			printf("\n\t-----------------------------------\n");
-			printf("\t\t   ALTERANDO ENDERECO");
+			printf("\tALTERANDO ENDERECO                     ");
 			printf("\n\t-----------------------------------\n\n\n");
 			printf("\n\tNovo Endereco: ");
 			scanf(" %51[^\n]",cli->endereco);
@@ -487,7 +487,7 @@ void editaCPFCliente (void) {
   	}
 	system("cls||clear");
 	printf("\n\t-----------------------------------\n");
-	printf("\t\t   PESQUISA CLIENTE");
+	printf("\tPESQUISA CLIENTE                       ");
 	printf("\n\t-----------------------------------\n\n\n");
 	printf("\tDigite o CPF do Cliente: ");
 	scanf(" %12[^\n]", busca);
@@ -506,7 +506,7 @@ void editaCPFCliente (void) {
 		if(resp == 'S' || resp == 's'){   
 			system("cls||clear");
 			printf("\n\t-----------------------------------\n");
-			printf("\t\t   ALTERANDO CPF");
+			printf("\tALTERANDO CPF                          ");
 			printf("\n\t-----------------------------------\n\n\n");
 			printf("\n\tNovo CPF: ");
 			scanf(" %12[^\n]",cli->cpf);
@@ -547,7 +547,7 @@ void editaTelefoneCliente (void) {
   	}
 	system("cls||clear");
 	printf("\n\t-----------------------------------\n");
-	printf("\t\t   PESQUISA CLIENTE");
+	printf("\tPESQUISA CLIENTE                       ");
 	printf("\n\t-----------------------------------\n\n\n");
 	printf("\tDigite o CPF do Cliente: ");
 	scanf(" %12[^\n]", busca);
@@ -567,7 +567,7 @@ void editaTelefoneCliente (void) {
 		if(resp == 'S' || resp == 's'){   
 			system("cls||clear");
 			printf("\n\t-----------------------------------\n");
-			printf("\t\t   ALTERANDO TELEFONE");
+			printf("\tALTERANDO TELEFONE                     ");
 			printf("\n\t-----------------------------------\n\n\n");
 			printf("\n\tNovo Telefone: ");
 			scanf(" %12[^\n]",cli->telefone);
@@ -609,7 +609,7 @@ void editaDadosCliente (void) {
   	}
 	system("cls||clear");
 	printf("\n\t-----------------------------------\n");
-	printf("\t\t   PESQUISA CLIENTE");
+	printf("\tPESQUISA CLIENTE                       ");
 	printf("\n\t-----------------------------------\n\n\n");
 	printf("\tDigite o CPF do Cliente: ");
 	scanf(" %12[^\n]", busca);
@@ -628,7 +628,7 @@ void editaDadosCliente (void) {
 		if (resp == 'S' || resp == 's') {   
 			system("cls||clear");
 			printf("\n\t-----------------------------------\n");
-			printf("\t\t   ALTERANDO TODOS OS DADOS");
+			printf("\tALTERANDO TODOS OS DADOS               ");
 			printf("\n\t-----------------------------------\n\n\n");
 			printf("\tCodigo Cliente: ");
 			scanf("	%3[^\n]", cli->codigo);
@@ -677,7 +677,7 @@ void excluirCliente (void) {
   	}
 	system("cls||clear");
 	printf("\n\t-----------------------------------\n");
-	printf("\t\t   PESQUISA CLIENTE");
+	printf("\tPESQUISA CLIENTE                       ");
 	printf("\n\t-----------------------------------\n\n\n");
 	printf("\tDigite o CPF do Cliente: ");
 	scanf(" %12[^\n]", busca);
@@ -723,17 +723,6 @@ int dataCadastroCliente (Cliente* cli) {
 	t.tm_sec = 1;
 	t.tm_isdst = -1;
 	int retorno = mktime(&t);
-
-	return retorno/86400;
-}
-
-
-int dataSistema(void) {
-	struct tm* t;
-	time_t rawtime;
-	time(&rawtime);
-	t = localtime(&rawtime);
-	int retorno = mktime(t);
 
 	return retorno/86400;
 }

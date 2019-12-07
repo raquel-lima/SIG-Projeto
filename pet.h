@@ -33,3 +33,4 @@ void editaObservacoesPet (void);
 void excluirPet (void);
 
 int dataCadastroPet(Pet*);
+int dataSistema(void);
