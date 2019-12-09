@@ -32,10 +32,10 @@ void login (void){
     int verificaSenha = 0;
     while(verificaSenha == 0){
         system("cls||clear");
-        printf("\n\t------------------------------------------\n");
-        printf("\t  SISTEMA DE GERENCIAMENTO DE PET SHOP");
-        printf("\n\t------------------------------------------\n\n\n");
-        printf("\tUsurario: ");
+        printf("\n\t--------------------------------------------------\n");
+        printf("\t   SIG-Customer: Sistema de Controle de Petshop");
+        printf("\n\t--------------------------------------------------\n\n\n");
+        printf("\tUsuario: ");
         gets(usuario);
         printf("\n\tSenha: ");
 
@@ -58,12 +58,12 @@ void login (void){
 }
 
 
-int menuPrincipal () {
+int menuPrincipal(void){
     int op;
     do {
         system("cls || clear");
         printf("\n\t------------------------------------\n");
-        printf("\t\t   MENU PRINCIPAL");
+        printf("\t\t   Menu Principal");
         printf("\n\t------------------------------------\n\n\n");
         puts("\t1. Cliente");
         puts("\t2. Pet");
@@ -71,7 +71,7 @@ int menuPrincipal () {
         puts("\t4. Relatorios");
         puts("\t5. Informacoes sobre Sistema");
         puts("\t0. Sair");
-        puts("\t----------------------------------");
+        puts("\t------------------------------------");
         printf("\tDigite uma opcao >>> ");
         scanf("%d", &op);
 
@@ -103,7 +103,3 @@ int menuPrincipal () {
 
     return op;
 }
-
-
-
-

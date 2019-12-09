@@ -1,1 +1,2 @@
-int validaCPF(char cpf[11]);
+int validaCPF(char* cpf);
+Cliente* buscaClienteCPF(char*);

@@ -4,95 +4,77 @@
 #include <conio.h>
 #include <time.h>
 #include "cliente.h"
+#include "validacoes.h"
 
-int menuPrincipal (void);
-void menuCliente (void);
-Cliente* insereCliente (void);
-void salvaCliente (Cliente*);
-void exibeCliente (Cliente*);
-void listaClientes (Cliente*);
-void buscaCliente (void);
-void alteraCliente (void);
-void editaCodigoCliente (void);
-void editaNomeCliente (void);
-void editaCPFCliente (void);
-void editaEnderecoCliente (void);
-void editaTelefoneCliente (void);
-void editaDadosCliente (void);
-void excluirCliente (void);
-void excluirCliente (void);
+char menuPrincipal(void);
 
-
-void menuCliente (void) {
+void menuCliente(void){
     Cliente* cli;
 	int op;
 	do { 
 		system("cls || clear");
         printf("\n\t------------------------------------\n");
-        printf("\tCLIENTE                                 ");
+        printf("\t               Ciente                   ");
         printf("\n\t------------------------------------\n\n\n");
-		puts("\t1. Cadastrar Novo Cliente");
-        puts("\t2. Exibir Clientes");
-        puts("\t3. Pesquisar Cliente");
-        puts("\t4. Alterar Cadastro");
-        puts("\t5. Excluir Cadastro");
+		puts("\t1. Cadastrar Cliente");
+        puts("\t2. Listar Clientes");
+        puts("\t3. Buscar Cliente");
+        puts("\t4. Editar Cliente");
+        puts("\t5. Excluir Cliente");
         puts("\t6. Menu Principal");
 		puts("\t0. Sair");
-        puts("\t----------------------------------");
+        puts("\t-------------------------------------");
 		printf("\tSelecine uma opcao >>> ");
 		scanf("%d", &op);
-
-            switch (op) {
+            switch(op){
                 case 1:
-                    cli = insereCliente ();
+                    cli = insereCliente();
                     break;
                 case 2:
-                    listaClientes (cli);
+                    listaClientes(cli);
                     break;
                 case 3:
-                    buscaCliente ();
+                    buscaCliente();
                     break;
                 case 4:
-                    alteraCliente ();
+                    alteraCliente();
                     break;
                 case 5:
-               		excluirCliente ();
+               		excluirCliente();
                     break;
                 case 6:
-                	menuPrincipal ();
+                	menuPrincipal();
                     break;
                 case 0:
                     exit(0);
                     break;
                 default:
-                    puts("\tOpcao invalida. Tente novamente!\n");
+                    puts("\n\tOpcao invalida. Tente novamente!\n");
                     break;
             }
-    
-
-	} while (op != 0);
-
+    } while (op != 0);
+    getchar();
 }
 
-
-Cliente* insereCliente (void) {
+Cliente* insereCliente(void){
     Cliente* cli;
 	char resp;
 	struct tm *info;
 	time_t segundos;
 
     cli = (Cliente*) malloc(sizeof(Cliente));
-
     system("cls || clear");
     printf("\n\t------------------------------------\n");
-    printf("\tNOVO CLIENTE                            ");
+    printf("\t            Novo Cliente              ");
     printf("\n\t------------------------------------\n\n\n");
-	printf("\tCodigo Cliente: ");
-    scanf("	%3[^\n]", cli->codigo);
-	printf("\tNome: ");
+	printf("\tNome do Cliente: ");
 	scanf(" %51[^\n]", cli->nome);
 	printf("\tCPF: ");
 	scanf(" %12[^\n]", cli->cpf);
+	while(validaCPF(cli->cpf) == 0){
+	    printf("\tCPF invalido! Digite novamente: ");
+        scanf(" %12[^\n]",cli->cpf);
+    }
 	printf("\tEndereco: ");
 	scanf(" %51[^\n]", cli->endereco);
 	printf("\tTelefone: ");
@@ -101,7 +83,7 @@ Cliente* insereCliente (void) {
 	printf("\n\n\tDeseja salvar o cadastro? (S ou N) ");
 	scanf("%s",&resp);
 	
-	if (resp == 'S' || resp == 's') {   
+	if(resp == 'S' || resp == 's'){   
 		time(&segundos);
 		info = localtime(&segundos);
 		strftime(cli->data, 31, "%d/%m/%Y as %X", info);
@@ -109,48 +91,40 @@ Cliente* insereCliente (void) {
 		cli->mes = info->tm_mon;
 		cli->ano = info->tm_year; 
 
-	    salvaCliente (cli);   
+	    salvaCliente (cli);
+	    getchar();   
 		printf("\n\tCadastro realizado com sucesso!\n");
-
-    } else {
+    } else{
         printf("\n\tCadastro cancelado!\n");
     }
-
     return cli;
     getchar();
     getchar();
 }
 
-
-void salvaCliente(Cliente* cli) {
-    FILE* arqc; 
+void salvaCliente(Cliente* cli){
+    FILE* fpCliente; 
 	cli->status = 'a';
 
-	arqc = fopen("cliente.txt", "at"); 
+	fpCliente = fopen("cliente.dat", "ab"); 
 	
-	if (arqc == NULL) {
+	if(fpCliente == NULL){
         printf("\n\n\n");
 		printf("\tErro na abertura do arquivo...\n");
 		printf("\tEncerrando o programa...\n");
 		exit (1);
-	
 	}
-
-	fwrite(cli, sizeof(Cliente), 1, arqc);
-	fclose(arqc);
+	fwrite(cli, sizeof(Cliente), 1, fpCliente);
+	fclose(fpCliente);
 }
 
-
 void exibeCliente (Cliente* cli) {
-
-	if ((cli == NULL) || (cli->status == 'd')) {
+	if((cli == NULL) || (cli->status == 'd')){
 		printf("\tCliente nao Cadastrado!\n");
-
-	} else {
-		printf("\n\tCliente cadastrado em : %s \n", cli->data);
-	    printf("\n\tCodigo Cliente: %s", cli->codigo);
+	} else{
+		printf("\tCliente cadastrado em : %s \n", cli->data);
 		printf("\n\tNome: %s", cli->nome);
-		printf("\n\tCpf: %c%c%c.%c%c%c.%c%c%c-%c%c", cli->cpf[0],cli->cpf[1],cli->cpf[2],
+		printf("\n\tCPF: %c%c%c.%c%c%c.%c%c%c-%c%c", cli->cpf[0],cli->cpf[1],cli->cpf[2],
 	    cli->cpf[3],cli->cpf[4],cli->cpf[5],cli->cpf[6],cli->cpf[7],cli->cpf[8],cli->cpf[9],
 	    cli->cpf[10]);
 	    printf("\n\tEndereco: %s",cli->endereco);
@@ -158,125 +132,114 @@ void exibeCliente (Cliente* cli) {
 	    cli->telefone[2],cli->telefone[3],cli->telefone[4],cli->telefone[5],cli->telefone[6],
 	    cli->telefone[7],cli->telefone[8],cli->telefone[9],cli->telefone[10]);
 	    printf("\n\t---------------------------------------------\n");
-	}
-	
+	}	
 }
 
-
-void listaClientes (Cliente* cli) {
-	FILE* arqc;
-
-	arqc = fopen("cliente.txt", "rt");
+void listaClientes(Cliente* cli){
+	FILE* fpCliente;
+	fpCliente = fopen("cliente.dat", "rb");
 	cli = (Cliente*) malloc(sizeof(Cliente));
-
-	if (arqc == NULL) {
+	if(fpCliente == NULL){
 		printf("\tErro na abertura do arquivo...\n");
 		printf("\tEncerrando o programa...");
 		exit(1);
   	}
 	system("cls||clear");
-	printf("\n\t----------------------------------------------\n");
-	printf("\tLISTA DE CLIENTES                                 ");
-	printf("\n\t------------------------------------------------\n\n\n");
-	while(fread(cli, sizeof(Cliente), 1, arqc)){
+	printf("\n\t---------------------------------------------\n");
+	printf("\t              Lista de Clientes                  ");
+	printf("\n\t---------------------------------------------\n\n\n");
+	while(fread(cli, sizeof(Cliente), 1, fpCliente)){
 		if(cli->status != 'd'){
 			exibeCliente(cli);
 		}
 	}
-
-	fclose(arqc);
+	fclose(fpCliente);
 	free(cli);
 	getchar();
 	getchar();
 }
 
-
 void buscaCliente(void){
-    FILE* arqc;
+    FILE* fpCliente;
     Cliente* cli;
     char busca[12];
     int achou;
 
-	arqc = fopen("cliente.txt", "rb");
+	fpCliente = fopen("cliente.dat", "rb");
 	cli = (Cliente*) malloc(sizeof(Cliente));
-
-    if (arqc == NULL) {
+    if(fpCliente == NULL){
 		printf("\tErro na abertura do arquivo...\n");
 		printf("\tEncerrando o programa...");
 		exit(1);
   	}
     system("cls || clear");
-    printf("\n\t------------------------------------\n");
-    printf("\tPESQUISA CLIENTE                        ");
-    printf("\n\t------------------------------------\n\n\n");
+    printf("\n\t-------------------------------------\n");
+    printf("\t            Busca Cliente                ");
+    printf("\n\t-------------------------------------\n\n\n");
 	printf("\tDigite o CPF do Cliente: ");
 	scanf(" %12[^\n]", busca);
+	while(validaCPF(busca) == 0){
+	    printf("\tCPF invalido! Digite novamente: ");
+        scanf(" %12[^\n]",busca);
+    }
     achou = 0;
-	while((!achou) && (fread(cli, sizeof(Cliente), 1, arqc))){
+	while((!achou) && (fread(cli, sizeof(Cliente), 1, fpCliente))){
    		if ((strcmp(cli->cpf, busca) == 0) && (cli->status == 'a')){
     		achou = 1;
    		}
   	}
-	fclose(arqc);
-	if (achou) {
+	fclose(fpCliente);
+	if(achou){
 		exibeCliente(cli);
-
-  	} else {
+  	} else{
 		printf("\n\n\tCliente nao cadastrado\n");
 	}
-
 	free(cli);
 	getchar();
 	getchar();
 }
 
-
-void alteraCliente (void) {
+void alteraCliente(void){
 	int op;
 	do { 
-		system("cls||clear");
-		printf("\n\t-----------------------------------\n");
-		printf("\tALTERAR DADOS DO CLIENTE               ");
-		printf("\n\t-----------------------------------\n\n\n");
-		puts("\t1. Codigo do Cliente");
-        puts("\t2. Nome");
-        puts("\t3. CPF");
-        puts("\t4. Endereco");
-        puts("\t5. Telefone");
-		puts("\t6. Todos os Campos");
-        puts("\t7. Menu Cliente");
+		system("cls || clear");
+    	printf("\n\t-------------------------------------\n");
+    	printf("\t            Edita Cliente                ");
+    	printf("\n\t-------------------------------------\n\n\n");
+        puts("\t1. Nome");
+        puts("\t2. CPF");
+        puts("\t3. Endereco");
+        puts("\t4. Telefone");
+		puts("\t5. Substiruir Cadastro");
+        puts("\t6. Menu Cliente");
 		puts("\t0. Sair");
 		puts("\t-------------------------------------");
 		printf("\tSelecine uma opcao >>> ");
 		scanf("%d", &op);
-
-		switch (op) {
+		switch(op){
 			case 1:
-				editaCodigoCliente ();
+                editaNomeCliente();
 				break;
 			case 2:
-                editaNomeCliente ();
+                editaCPFCliente();
 				break;
 			case 3:
-                editaCPFCliente ();
-				break;
-			case 4:
 				editaEnderecoCliente();
 				break;
-			case 5:
+			case 4:
 				editaTelefoneCliente();
 				break;
-			case 6:
+			case 5:
 				editaDadosCliente();
 				break;
-			case 7:
-				menuCliente ();
+			case 6:
+				menuCliente();
 				break;
 			case 0:
 				exit(0);
 				break;
 			default:
-				puts("\tOpcao invalida. Tente novamente!\n");
+				puts("\n\tOpcao invalida. Tente novamente!\n");
             break;
 		}
 
@@ -284,216 +247,148 @@ void alteraCliente (void) {
     getchar();
 }
 
-
-
-void editaCodigoCliente (void) {
-    FILE* arqc;
+void editaNomeCliente(void){
+    FILE* fpCliente;
     Cliente* cli;
     char busca[12];
 	char resp;
     int achou;
 
-	arqc = fopen("cliente.txt", "r+t");
+	fpCliente = fopen("cliente.dat", "r+b");
 	cli = (Cliente*) malloc(sizeof(Cliente));
-	
-    if(arqc == NULL) {
+    if(fpCliente == NULL){
 		printf("\tErro na abertura do arquivo...\n");
 		printf("\tEncerrando o programa...");
 		exit(1);
   	}
 	system("cls||clear");
-	printf("\n\t-----------------------------------\n");
-	printf("\tPESQUISA CLIENTE                       ");
-	printf("\n\t-----------------------------------\n\n\n");
+    printf("\n\t-------------------------------------\n");
+    printf("\t            Edita Cliente                ");
+    printf("\n\t-------------------------------------\n\n\n");
 	printf("\tDigite o CPF do Cliente: ");
 	scanf(" %12[^\n]", busca);
- 
+	while(validaCPF(busca) == 0){
+	    printf("\tCPF invalido! Digite novamente: ");
+        scanf(" %12[^\n]",busca);
+    }
     achou = 0;
-	while((!achou) && (fread(cli, sizeof(Cliente), 1, arqc))) {
-   		if ((strcmp(cli->cpf, busca) == 0) && (cli->status == 'a')) {
-    		achou = 1;
-   		}
-  	}
-
-	if(achou){
-		exibeCliente(cli);
-		printf("\tDeseja realmente editar o codigo deste cliente? (S ou N) ");
-		scanf("%s",&resp);
-	
-		if(resp == 'S' || resp == 's'){   
-			system("cls||clear");
-			printf("\n\t-----------------------------------\n");
-			printf("\tALTERANDO CODIGO                       ");
-			printf("\n\t-----------------------------------\n\n\n");
-			printf("\n\tNovo Codigo: ");
-			scanf(" %3[^\n]",cli->codigo);
-			cli->status = 'a';
-			fseek(arqc, -1*sizeof(Cliente), SEEK_CUR);
-			fwrite(cli, sizeof(Cliente), 1, arqc);
-			printf("\n\tCodigo alterado com sucesso!\n");
-
-		} else {
-			printf("\n\tO codigo do cliente permanece inalterado!\n");
-		}
-		
-  	} else {
-		printf("\n\n\tCliente nao cadastrado\n");
-	}
-
-	fclose(arqc);
-	free(cli);
-	getchar();
-	getchar();
-}
-
-
-void editaNomeCliente (void) {
-    FILE* arqc;
-    Cliente* cli;
-    char busca[12];
-	char resp;
-    int achou;
-
-	arqc = fopen("cliente.txt", "r+t");
-	cli = (Cliente*) malloc(sizeof(Cliente));
-	
-    if (arqc == NULL) {
-		printf("\tErro na abertura do arquivo...\n");
-		printf("\tEncerrando o programa...");
-		exit(1);
-  	}
-	system("cls||clear");
-	printf("\n\t-----------------------------------\n");
-	printf("\tPESQUISA CLIENTE                       ");
-	printf("\n\t-----------------------------------\n\n\n");
-	printf("\tDigite o CPF do Cliente: ");
-	scanf(" %12[^\n]", busca);
-   
-    achou = 0;
-	while((!achou) && (fread(cli, sizeof(Cliente), 1, arqc))){
+	while((!achou) && (fread(cli, sizeof(Cliente), 1, fpCliente))){
    		if ((strcmp(cli->cpf, busca) == 0) && (cli->status == 'a')){
     		achou = 1;
    		}
   	}
-
 	if(achou){
 		exibeCliente(cli);
 		printf("\tDeseja realmente editar o nome deste cliente? (S ou N) ");
 		scanf("%s",&resp);
-	
 		if(resp == 'S' || resp == 's'){   
 			system("cls||clear");
-			printf("\n\t-----------------------------------\n");
-			printf("\tALTERANDO NOME                         ");
-			printf("\n\t-----------------------------------\n\n\n");
+	    	printf("\n\t-------------------------------------\n");
+	    	printf("\t              Edita Nome                 ");
+	    	printf("\n\t-------------------------------------\n\n\n");
 			printf("\n\tNovo Nome: ");
 			scanf(" %51[^\n]",cli->nome);
 			cli->status = 'a';
-			fseek(arqc, -1*sizeof(Cliente), SEEK_CUR);
-			fwrite(cli, sizeof(Cliente), 1, arqc);
+			fseek(fpCliente, -1*sizeof(Cliente), SEEK_CUR);
+			fwrite(cli, sizeof(Cliente), 1, fpCliente);
 			printf("\n\tNome alterado com sucesso!\n");
 
-		}
-		else{
+		} else{
 			printf("\n\tO nome do cliente permanece inalterado!\n");
 		}
-		
-  	} else {
+  	} else{
 		printf("\n\n\tCliente nao cadastrado\n");
 	}
-
-	fclose(arqc);
+	fclose(fpCliente);
 	free(cli);
 	getchar();
 	getchar();
 }
 
-
-void editaEnderecoCliente (void) {
-    FILE* arqc;
+void editaEnderecoCliente(void){
+    FILE* fpCliente;
     Cliente* cli;
     char busca[12];
 	char resp;
     int achou;
 
-	arqc = fopen("cliente.txt", "r+t");
+	fpCliente = fopen("cliente.dat", "r+b");
 	cli = (Cliente*) malloc(sizeof(Cliente));
-
-    if (arqc == NULL) {
+    if(fpCliente == NULL){
 		printf("\tErro na abertura do arquivo...\n");
 		printf("\tEncerrando o programa...");
 		exit(1);
   	}
 	system("cls||clear");
-	printf("\n\t-----------------------------------\n");
-	printf("\tPESQUISA CLIENTE                       ");
-	printf("\n\t-----------------------------------\n\n\n");
+	printf("\n\t-------------------------------------\n");
+    printf("\t            Edita Cliente                ");
+    printf("\n\t-------------------------------------\n\n\n");
 	printf("\tDigite o CPF do Cliente: ");
 	scanf(" %12[^\n]", busca);
-
+	while(validaCPF(busca) == 0){
+	    printf("\tCPF invalido! Digite novamente: ");
+        scanf(" %12[^\n]",busca);
+    }
     achou = 0;
-	while((!achou) && (fread(cli, sizeof(Cliente), 1, arqc))){
+	while((!achou) && (fread(cli, sizeof(Cliente), 1, fpCliente))){
    		if ((strcmp(cli->cpf, busca) == 0) && (cli->status == 'a')){
     		achou = 1;
    		}
   	}
-
 	if(achou){
 		exibeCliente(cli);
 		printf("\tDeseja realmente editar o endereco deste cliente? (S ou N) ");
 		scanf("%s",&resp);
-	
 		if(resp == 'S' || resp == 's'){   
 			system("cls||clear");
-			printf("\n\t-----------------------------------\n");
-			printf("\tALTERANDO ENDERECO                     ");
-			printf("\n\t-----------------------------------\n\n\n");
+	    	printf("\n\t-------------------------------------\n");
+	    	printf("\t           Edita Endereco                ");
+	    	printf("\n\t-------------------------------------\n\n\n");
 			printf("\n\tNovo Endereco: ");
 			scanf(" %51[^\n]",cli->endereco);
 			cli->status = 'a';
-			fseek(arqc, -1*sizeof(Cliente), SEEK_CUR);
-			fwrite(cli, sizeof(Cliente), 1, arqc);
+			fseek(fpCliente, -1*sizeof(Cliente), SEEK_CUR);
+			fwrite(cli, sizeof(Cliente), 1, fpCliente);
 			printf("\n\tEndereco alterado com sucesso!\n");
 
-		} else {
+		} else{
 			printf("\n\tO Endereco do cliente permanece inalterado!\n");
-		}
-		
-  	} else {
+		}	
+  	} else{
 		printf("\n\n\tCliente nao cadastrado\n");
 	}
-
-	fclose(arqc);
+	fclose(fpCliente);
 	free(cli);
 	getchar();
 	getchar();
 }
 
-
-void editaCPFCliente (void) {
-    FILE* arqc;
+void editaCPFCliente(void){
+    FILE* fpCliente;
     Cliente* cli;
     char busca[12];
 	char resp;
     int achou;
 
-	arqc = fopen("cliente.txt", "r+t");
+	fpCliente = fopen("cliente.dat", "r+b");
 	cli = (Cliente*) malloc(sizeof(Cliente));
-
-    if(arqc == NULL) {
+    if(fpCliente == NULL) {
 		printf("\tErro na abertura do arquivo...\n");
 		printf("\tEncerrando o programa...");
 		exit(1);
   	}
 	system("cls||clear");
-	printf("\n\t-----------------------------------\n");
-	printf("\tPESQUISA CLIENTE                       ");
-	printf("\n\t-----------------------------------\n\n\n");
+	printf("\n\t-------------------------------------\n");
+	printf("\t            Edita Cliente                ");
+	printf("\n\t-------------------------------------\n\n\n");
 	printf("\tDigite o CPF do Cliente: ");
 	scanf(" %12[^\n]", busca);
-   
+	while(validaCPF(busca) == 0){
+	    printf("\tCPF invalido! Digite novamente: ");
+        scanf(" %12[^\n]",busca);
+    }
     achou = 0;
-	while((!achou) && (fread(cli, sizeof(Cliente), 1, arqc))){
+	while((!achou) && (fread(cli, sizeof(Cliente), 1, fpCliente))){
    		if ((strcmp(cli->cpf, busca) == 0) && (cli->status == 'a')){
     		achou = 1;
    		}
@@ -502,193 +397,186 @@ void editaCPFCliente (void) {
 		exibeCliente(cli);
 		printf("\tDeseja realmente editar o cpf deste cliente? (S ou N) ");
 		scanf("%s",&resp);
-	
 		if(resp == 'S' || resp == 's'){   
 			system("cls||clear");
-			printf("\n\t-----------------------------------\n");
-			printf("\tALTERANDO CPF                          ");
-			printf("\n\t-----------------------------------\n\n\n");
+			printf("\n\t-------------------------------------\n");
+	    	printf("\t                Edita CPF                ");
+	    	printf("\n\t-------------------------------------\n\n\n");
 			printf("\n\tNovo CPF: ");
 			scanf(" %12[^\n]",cli->cpf);
+			while(validaCPF(cli->cpf) == 0){
+		    printf("\tCPF invalido! Digite novamente: ");
+	        scanf(" %12[^\n]",cli->cpf);
+	    	}
 			cli->status = 'a';
-			fseek(arqc, -1*sizeof(Cliente), SEEK_CUR);
-			fwrite(cli, sizeof(Cliente), 1, arqc);
+			fseek(fpCliente, -1*sizeof(Cliente), SEEK_CUR);
+			fwrite(cli, sizeof(Cliente), 1, fpCliente);
 			printf("\n\tCPF alterado com sucesso!\n");
-
-		} else {
+		} else{
 			printf("\n\tO CPF do cliente permanece inalterado!\n");
 		}
-		
-  	} else {
+  	} else{
 		printf("\n\n\tCliente nao cadastrado\n");
 	}
 
-	fclose(arqc);
+	fclose(fpCliente);
 	free(cli);
 	getchar();
 	getchar();
 }
 
-
-void editaTelefoneCliente (void) {
-    FILE* arqc;
+void editaTelefoneCliente(void){
+    FILE* fpCliente;
     Cliente* cli;
     char busca[12];
 	char resp;
     int achou;
 
-	arqc = fopen("cliente.txt", "r+t");
+	fpCliente = fopen("cliente.dat", "r+b");
 	cli = (Cliente*) malloc(sizeof(Cliente));
-
-    if(arqc == NULL) {
+    if(fpCliente == NULL){
 		printf("\tErro na abertura do arquivo...\n");
 		printf("\tEncerrando o programa...");
 		exit(1);
   	}
 	system("cls||clear");
-	printf("\n\t-----------------------------------\n");
-	printf("\tPESQUISA CLIENTE                       ");
-	printf("\n\t-----------------------------------\n\n\n");
+	printf("\n\t-------------------------------------\n");
+    printf("\t            Edita Cliente                ");
+    printf("\n\t-------------------------------------\n\n\n");
 	printf("\tDigite o CPF do Cliente: ");
 	scanf(" %12[^\n]", busca);
-
+	while(validaCPF(busca) == 0){
+	    printf("\tCPF invalido! Digite novamente: ");
+        scanf(" %12[^\n]",busca);
+    }
     achou = 0;
-	while ((!achou) && (fread(cli, sizeof(Cliente), 1, arqc))){
-   		if ((strcmp(cli->cpf, busca) == 0) && (cli->status == 'a')){
+	while((!achou) && (fread(cli, sizeof(Cliente), 1, fpCliente))){
+   		if((strcmp(cli->cpf, busca) == 0) && (cli->status == 'a')){
     		achou = 1;
    		}
   	}
-
-	if (achou) {
+	if(achou){
 		exibeCliente(cli);
 		printf("\tDeseja realmente editar o telefone deste cliente? (S ou N) ");
 		scanf("%s",&resp);
-	
 		if(resp == 'S' || resp == 's'){   
 			system("cls||clear");
-			printf("\n\t-----------------------------------\n");
-			printf("\tALTERANDO TELEFONE                     ");
-			printf("\n\t-----------------------------------\n\n\n");
+			printf("\n\t-------------------------------------\n");
+    		printf("\t           Edita Telefone                ");
+    		printf("\n\t-------------------------------------\n\n\n");
 			printf("\n\tNovo Telefone: ");
 			scanf(" %12[^\n]",cli->telefone);
 			cli->status = 'a';
-			fseek(arqc, -1*sizeof(Cliente), SEEK_CUR);
-			fwrite(cli, sizeof(Cliente), 1, arqc);
+			fseek(fpCliente, -1*sizeof(Cliente), SEEK_CUR);
+			fwrite(cli, sizeof(Cliente), 1, fpCliente);
 			printf("\n\tTelefone alterado com sucesso!\n");
-
-		} else {
+		} else{
 			printf("\n\tO Telefone do cliente permanece inalterado!\n");
 		}
-		
-  	} else {
+  	} else{
 		printf("\n\n\tCliente nao cadastrado\n");
 	}
 
-	fclose(arqc);
+	fclose(fpCliente);
 	free(cli);
 	getchar();
 	getchar();
 }
 
-
-
-void editaDadosCliente (void) {
-    FILE* arqc;
+void editaDadosCliente(void){
+    FILE* fpCliente;
     Cliente* cli;
     char busca[12];
 	char resp;
     int achou;
 
-	arqc = fopen("cliente.txt", "r+t");
+	fpCliente = fopen("cliente.dat", "r+b");
 	cli = (Cliente*) malloc(sizeof(Cliente));
-
-    if (arqc == NULL) {
+    if(fpCliente == NULL){
 		printf("\tErro na abertura do arquivo...\n");
 		printf("\tEncerrando o programa...");
 		exit(1);
   	}
 	system("cls||clear");
-	printf("\n\t-----------------------------------\n");
-	printf("\tPESQUISA CLIENTE                       ");
-	printf("\n\t-----------------------------------\n\n\n");
+    printf("\n\t-------------------------------------\n");
+	printf("\t            Edita Cliente                ");
+	printf("\n\t-------------------------------------\n\n\n");
 	printf("\tDigite o CPF do Cliente: ");
 	scanf(" %12[^\n]", busca);
-
     achou = 0;
-	while ((!achou) && (fread(cli, sizeof(Cliente), 1, arqc))) {
-   		if ((strcmp(cli->cpf, busca) == 0) && (cli->status == 'a')) {
+	while((!achou) && (fread(cli, sizeof(Cliente), 1, fpCliente))){
+   		if((strcmp(cli->cpf, busca) == 0) && (cli->status == 'a')){
     		achou = 1;
    		}
   	}
-	if (achou) {
+	if(achou){
 		exibeCliente(cli);
 		printf("\tDeseja realmente editar todos os dados deste cliente? (S ou N) ");
 		scanf("%s",&resp);
-	
-		if (resp == 'S' || resp == 's') {   
+		if(resp == 'S' || resp == 's'){   
 			system("cls||clear");
-			printf("\n\t-----------------------------------\n");
-			printf("\tALTERANDO TODOS OS DADOS               ");
-			printf("\n\t-----------------------------------\n\n\n");
-			printf("\tCodigo Cliente: ");
-			scanf("	%3[^\n]", cli->codigo);
-			printf("\tNome: ");
+			printf("\n\t-------------------------------------\n");
+    		printf("\t      Substituir Cadastro                ");
+    		printf("\n\t-------------------------------------\n\n\n");
+			printf("\tNome do Cliente: ");
 			scanf(" %51[^\n]", cli->nome);
 			printf("\tCPF: ");
 			scanf(" %12[^\n]", cli->cpf);
+			while(validaCPF(cli->cpf) == 0){
+		    printf("\tCPF invalido! Digite novamente: ");
+	        scanf(" %12[^\n]",cli->cpf);
+	    	}
 			printf("\tEndereco: ");
 			scanf(" %51[^\n]", cli->endereco);
 			printf("\tTelefone: ");
 			scanf(" %12[^\n]", cli->telefone);
 			cli->status = 'a';
-			fseek(arqc, -1*sizeof(Cliente), SEEK_CUR);
-			fwrite(cli, sizeof(Cliente), 1, arqc);
+			fseek(fpCliente, -1*sizeof(Cliente), SEEK_CUR);
+			fwrite(cli, sizeof(Cliente), 1, fpCliente);
 			printf("\n\tDados alterados com sucesso!\n");
 
-		} else {
+		} else{
 			printf("\n\tOs dados do cliente permanecem inalterados!\n");
 		}
-		
-  	} else {
+  	} else{
 		printf("\n\n\tCliente nao cadastrado\n");
 	}
-
-	fclose(arqc);
+	fclose(fpCliente);
 	free(cli);
 	getchar();
 	getchar();
 }
 
-
-void excluirCliente (void) {
-	FILE* arqc;
+void excluirCliente(void){
+	FILE* fpCliente;
 	Cliente* cli;
     char busca[12];
 	char resp;
     int achou;
 
-	arqc = fopen("cliente.txt", "r+t");
+	fpCliente = fopen("cliente.dat", "r+b");
 	cli = (Cliente*) malloc(sizeof(Cliente));
-
-    if (arqc == NULL) {
+    if(fpCliente == NULL){
 		printf("\tErro na abertura do arquivo...\n");
 		printf("\tEncerrando o programa...");
 		exit(1);
   	}
-	system("cls||clear");
-	printf("\n\t-----------------------------------\n");
-	printf("\tPESQUISA CLIENTE                       ");
-	printf("\n\t-----------------------------------\n\n\n");
+	system("cls || clear");
+    printf("\n\t------------------------------------\n");
+    printf("\t           Exclui Cliente               ");
+    printf("\n\t------------------------------------\n\n\n");
 	printf("\tDigite o CPF do Cliente: ");
 	scanf(" %12[^\n]", busca);
-
+	while(validaCPF(busca) == 0){
+	    printf("\tCPF invalido! Digite novamente: ");
+        scanf(" %12[^\n]",busca);
+    }
     achou = 0;
-	while((!achou) && (fread(cli, sizeof(Cliente), 1, arqc))){
+	while((!achou) && (fread(cli, sizeof(Cliente), 1, fpCliente))){
    		if ((strcmp(cli->cpf, busca) == 0) && (cli->status == 'a')){
     		achou = 1;
    		}
   	}
-
 	if(achou){
 		exibeCliente(cli);
 		printf("\tDeseja excluir deste cliente? (S ou N) ");
@@ -696,24 +584,22 @@ void excluirCliente (void) {
 	
 		if(resp == 'S' || resp == 's'){   
 			cli->status = 'd';
-			fseek(arqc, -1*sizeof(Cliente), SEEK_CUR);
-			fwrite(cli, sizeof(Cliente), 1, arqc);
+			fseek(fpCliente, -1*sizeof(Cliente), SEEK_CUR);
+			fwrite(cli, sizeof(Cliente), 1, fpCliente);
 			printf("\n\tCliente excluido com sucesso!\n");
-		} else {
+		} else{
 			printf("\n\tO cliente permanece cadastrado!\n");
 		}
-		
-  	} else {
+  	} else{
 		printf("\n\n\tCliente nao cadastrado\n");
 	}
-
-	fclose(arqc);
+	fclose(fpCliente);
 	free(cli);
 	getchar();
 	getchar();
 }
 
-int dataCadastroCliente (Cliente* cli) {
+int dataCadastroCliente(Cliente* cli){
 	struct tm t;
 	t.tm_mday = cli->dia;
 	t.tm_mon = cli->mes;
